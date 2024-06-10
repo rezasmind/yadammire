@@ -1,117 +1,200 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { TiTick } from "react-icons/ti";
+import { Button } from "@nextui-org/react";
+import stars from "../../public/stars.png";
+import elon from "../../public/elon.png";
+import jeff from "../../public/jeffbezos.png";
+import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import bg from "../../public/bg-1.png";
 
 export default function Home() {
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="background-white w-full">
+      <Image src={bg} alt="" className=" absolute" />
+      <Image src={bg} alt="" className=" absolute left-0 top-24" />
+      <div className="hero w-full h-screen flex justify-center items-center flex-col">
+        <h1 className="text-center font-peyda font-bold text-[63px] mb-3">
+          هرچی یادت رفت <br></br>
+          <span className="text-primary "> ما یادمون میمونه! </span>
+        </h1>
+
+        <h3 className="font-peyda mb-6">
+          انرژیتو ذخیره کن برای کارای مهمتر بقیشو بسپار به ما
+        </h3>
+
+        <ul className="font-peyda flex-col flex gap-2 mb-6">
+          <li className="flex flex-row">
+            <TiTick color="#66D7D1" />
+            دیگه کسی نمیفهمه ADHD داری
+          </li>
+          <li className="flex flex-row">
+            <TiTick color="#66D7D1" />
+            نیاز نیست ۴۷ تا آلارم بذاری
+          </li>
+          <li className="flex flex-row">
+            <TiTick color="#66D7D1" />
+            دیگه هم از کسی بابت فراموشی عذر نخواه 🗿
+          </li>
+        </ul>
+
+        <Button className="bg-primary font-peyda py-2 px-4 rounded-lg mb-6">
+          شروع نه به فراموشی
+        </Button>
+
+        <div className="testimonials-1 flex flex-col justify-center items-center gap-2">
+          <Image src={stars} alt="" />
+          <h1 className="font-peyda">
+            <span className=" font-semibold">۳۲۴</span> نفر تا به حال نجات
+            یافتند
+          </h1>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className="hero2 w-full mb-24 flex justify-center items-center flex-col">
+        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+          خسته شدی از بس بابت فراموشیت{" "}
+          <span className="text-primary">عذرخواهی</span> کردی؟
+        </h1>
+
+        <div className="boxes w-full flex flex-row justify-center  gap-8">
+          <div className="left w-1/4 bg-primary rounded-xl p-8">
+            <h1 className="font-peyda font-semibold text-2xl">
+              ADHD با یادم میره
+            </h1>
+
+            <ul className="font-peyda mt-12 text-lg flex flex-col gap-4">
+              <li>-به همه کارات به موقع میرسی</li>
+              <li>-خانواده و رفیقات ازت خوشحالن</li>
+              <li>-تو جیبت پول میمونه</li>
+              <li>-سر تایم پروژه هاتو تحویل میدی</li>
+            </ul>
+          </div>
+          <div className="right w-1/4 bg-[#e6e6e6] rounded-xl p-8">
+            <h1 className="font-peyda font-semibold text-2xl">
+              ADHD بدون یادم میره
+            </h1>
+
+            <ul className="font-peyda mt-12 text-lg flex flex-col gap-4">
+              <li>-مضحکه خاص و عام میشی</li>
+              <li>-انواع فحش های جدید میشنوی</li>
+              <li>-کاراتو نمیرسی پس پولیم نداری</li>
+              <li>-به تایم مصاحبه استخدامی هم نمیرسی</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+      <div className="testimonial-2 w-full flex flex-col mb-12">
+        <div className="testimonials-1 flex flex-col justify-center items-center gap-3">
+          <Image src={stars} alt="" />
+          <h1 className="font-peyda max-w-lg text-center text-lg font-semibold">
+            با ۶ تا بچه دیگه داشت اسممو یادم میرفت تا اینکه با سرویس یادم میره
+            آشنا شدم و تسکامو بهش دادم تا با هوش مصنوعی فوق پیشرفتش بهم یادآوری
+            کنه.
+          </h1>
+          <div className="inf flex-row flex font-peyda gap-3">
+            <Image src={elon} alt={""} className="w-12 h-12" />
+            <div className="name">
+              <h1 className="font-semibold">ایلان ماسک</h1>
+              <h1 className="text-[#999999]">پدر ۶ فرزند</h1>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+      <div className="hero2 w-full mb-24 mt-24 h-[48vh] flex justify-center items-center flex-col">
+        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+          این <span className="text-primary">۳ تا کار</span> نجاتت میده!
+        </h1>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+        <div className="sections w-screen flex flex-row justify-center items-center">
+          <div className="right w-1/4">
+            <Accordion className="">
+              <AccordionItem
+                key="1"
+                aria-label="Accordion 1"
+                title="۱. تسکتو بنویس"
+                className="text-black font-peyda"
+              >
+                <h1 className="!text-black font-semibold">
+                  هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین. 📝
+                </h1>
+              </AccordionItem>
+              <AccordionItem
+                key="2"
+                aria-label="Accordion 2"
+                title="۲. تاریخ و ساعت انجامش رو بنویس"
+                className="text-primary font-peyda f"
+              >
+                <h1 className="!text-black font-semibold">
+                  بعدش مشخص میکنی که تسکت کی باید انجام بشه؟⏰
+                </h1>
+              </AccordionItem>
+              <AccordionItem
+                key="3"
+                aria-label="Accordion 3"
+                title="۳. یه تاریخ و ساعتم بده یادآوری کنیم"
+                className="text-black font-peyda"
+              >
+                <h1 className="!text-black font-semibold">
+                  حالا نوبت اینکه بگی چند دقیقه قبلش بهت یادآوری کنم 😉
+                </h1>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+      </div>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="testimonial-2 w-full flex flex-col mb-12">
+        <div className="testimonials-1 flex flex-col justify-center items-center gap-3">
+          <Image src={stars} alt="" />
+          <h1 className="font-peyda max-w-lg text-center text-lg font-semibold">
+            بین بچه‌ها و کارهای خونه، عملاً یادم نمی‌موند کجا چی گذاشتم! با
+            «یادم میره» خیالم راحته که حتی کوچیک‌ترین کارها رو فراموش نمی‌کنم.
+            این برنامه واقعاً زندگی من رو نظم داده.
+          </h1>
+          <div className="inf flex-row flex font-peyda gap-3">
+            <Image src={jeff} alt={""} className="w-12 h-12" />
+            <div className="name">
+              <h1 className="font-semibold">جف بزوس</h1>
+              <h1 className="text-[#999999]"> رقیب ایلان ماسک</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="pricing-section w-full  mt-24 bg-[#EBEBEB] flex flex-col justify-center items-center p-14">
+        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+          با یادم میره <span className="text-primary">فراموشی</span> یک توهمه 😉
+        </h1>
+
+        <div className="prices h-full w-full flex flex-row-reverse justify-center items-center gap-8 font-peyda ">
+          <div className="free  bg-[#ffffff] rounded-lg flex items-center justify-center flex-col p-14 gap-14">
+            <h1 className="font-bold text-2xl">رایگان</h1>
+
+            <ul>
+              <li>- ۵ تسک ماهانه</li>
+              <li>- یک استارتاپ شکست خورده دیگه</li>
+            </ul>
+
+            <Button className="bg-primary py-2 px-4 rounded-xl font-semibold">
+              ایشالا ماه بعد میخرم
+            </Button>
+          </div>
+
+          <div className="price   rounded-lg flex items-center justify-center flex-col p-14 gap-14 bg-primary ">
+            <h1 className="font-bold text-2xl">۲۳ هزار تومان</h1>
+
+            <ul>
+              <li>- تسک نامحدود</li>
+              <li>- یک دوست به دوستانتون اضافه میشه (سازنده)</li>
+            </ul>
+
+            <Button className="bg-[#ffffff] py-2 px-4 rounded-xl font-semibold">
+              یا علی مدد
+            </Button>
+          </div>
+        </div>
       </div>
     </main>
   );
