@@ -22,11 +22,11 @@ const Footer = () => {
 
         <div className="social-media flex flex-row gap-4">
           <Link href={"instagram.com/rezasmind"}>
-            <FaInstagram color="#66D7D1" size={20}/>
+            <FaInstagram color="#66D7D1" size={20} />
           </Link>
 
           <Link href={"twitter.com/rezasmind"}>
-            <TbBrandTwitter color="#66D7D1" size={20}/>
+            <TbBrandTwitter color="#66D7D1" size={20} />
           </Link>
         </div>
       </div>

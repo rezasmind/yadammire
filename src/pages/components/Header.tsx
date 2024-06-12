@@ -11,6 +11,9 @@ import {
   Link,
   Button,
 } from "@nextui-org/react";
+import Image from "next/image";
+
+import logo from "../../../public/Logo-Trans.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,29 +39,37 @@ const Header = () => {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <p className="font-peyda font-bold">یادم میره</p>
+          <Image src={logo} alt="logo" width={60} />
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4 font-peyda" justify="center">
+      <NavbarContent
+        className="hidden sm:flex gap-4 font-peyda"
+        justify="center"
+      >
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="#" >
             رودمپ
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="#" aria-current="page">
-            تعرفه ها
-          </Link>
+          <Link href="#">تعرفه ها</Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-درباره سازنده          </Link>
+            درباره سازنده{" "}
+          </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat" className="rounded-2xl font-peyda">
+          <Button
+            as={Link}
+            color="primary"
+            href="#"
+            variant="flat"
+            className="rounded-2xl font-peyda"
+          >
             ورود به پنل
           </Button>
         </NavbarItem>
