@@ -1,9 +1,7 @@
-"use client";
-
 import { AnimatePresence, motion } from "framer-motion";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 
-export const AnimatedList = React.memo(
+const AnimatedList = React.memo(
   ({
     className,
     children,
@@ -30,10 +28,12 @@ export const AnimatedList = React.memo(
     );
 
     return (
-      <div className={`flex flex-col items-center gap-4 ${className} !from-current !to-transparent`}>
+      <div
+        className={`flex flex-col items-center gap-4 ${className} !from-current !to-transparent`}
+      >
         <AnimatePresence>
           {itemsToShow.map((item) => (
-            <AnimatedListItem key={(item as ReactElement).key} >
+            <AnimatedListItem key={(item as ReactElement).key}>
               {item}
             </AnimatedListItem>
           ))}
@@ -59,3 +59,5 @@ export function AnimatedListItem({ children }: { children: React.ReactNode }) {
     </motion.div>
   );
 }
+
+export default AnimatedList;

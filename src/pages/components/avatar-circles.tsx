@@ -27,7 +27,7 @@ const AvatarCircles = ({
       >
         +۳۲۱
       </a>
-      {avatarUrls.map((url, index) => (
+      {avatarUrls?.map((url, index) => (
         <img
           key={index}
           className="h-10 w-10 rounded-full border-2 border-white dark:border-gray-800"

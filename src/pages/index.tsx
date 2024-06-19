@@ -15,7 +15,7 @@ import bg from "../../public/bg-1.png";
 import PricingPage from "./components/PricingPage";
 
 import { cn } from "@/lib/utils";
-import { AnimatedList } from "./components/animated-list";
+import AnimatedList  from "./components/animated-list";
 import AvatarCircles from "./components/avatar-circles";
 
 const avatarUrls = [
