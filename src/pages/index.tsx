@@ -4,8 +4,15 @@ import { Button } from "@nextui-org/react";
 import stars from "../../public/stars.png";
 import elon from "../../public/elon.png";
 import jeff from "../../public/jeffbezos.png";
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 import bg from "../../public/bg-1.png";
+import PricingPage from "./components/PricingPage";
 
 export default function Home() {
   return (
@@ -109,36 +116,31 @@ export default function Home() {
 
         <div className="sections w-screen flex flex-row justify-center items-center">
           <div className="right w-1/4">
-            <Accordion className="">
-              <AccordionItem
-                key="1"
-                aria-label="Accordion 1"
-                title="۱. تسکتو بنویس"
-                className="text-black font-peyda "
-              >
-                <h1 className="!text-black font-semibold">
-                  هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین. 📝
-                </h1>
+            <Accordion type="single" collapsible className="font-peyda">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="font-semibold">
+                  ۱. تسکتو بنویس 📝
+                </AccordionTrigger>
+                <AccordionContent>
+                  هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین. 
+                </AccordionContent>
               </AccordionItem>
-              <AccordionItem
-                key="2"
-                aria-label="Accordion 2"
-                title="۲. تاریخ و ساعت انجامش رو بنویس"
-                className=" font-peyda f"
-              >
-                <h1 className="!text-black font-semibold">
-                  بعدش مشخص میکنی که تسکت کی باید انجام بشه؟⏰
-                </h1>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="font-semibold">
+                  ۲. تاریخ و ساعت انجامشو بنویس ⏰
+                </AccordionTrigger>
+                <AccordionContent>
+                  بعدش مشخص میکنی که تسکت کی باید انجام بشه؟
+                </AccordionContent>
               </AccordionItem>
-              <AccordionItem
-                key="3"
-                aria-label="Accordion 3"
-                title="۳. یه تاریخ و ساعتم بده یادآوری کنیم"
-                className="text-black font-peyda"
-              >
-                <h1 className="!text-black font-semibold">
-                  حالا نوبت اینکه بگی چند دقیقه قبلش بهت یادآوری کنم 😉
-                </h1>
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="font-semibold">
+                  ۳. یه تاریخ و ساعتم بده یادآوری کنم 😉
+                </AccordionTrigger>
+                <AccordionContent>
+                  حالا نوبت اینکه بگی چند دقیقه قبلش بهت یادآوری کنم 
+                </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
@@ -163,38 +165,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pricing-section w-full  mt-24 bg-[#EBEBEB] flex flex-col justify-center items-center p-14">
+      <div className="pricing-section w-full  mt-24 bg-[#f7f7f7] flex flex-col justify-center items-center p-14">
         <h1 className="font-peyda font-bold text-[32px]  mb-6">
           با یادم میره <span className="text-primary">فراموشی</span> یک توهمه 😉
         </h1>
 
-        <div className="prices h-full w-full flex flex-row-reverse justify-center items-center gap-8 font-peyda ">
-          <div className="free  bg-[#ffffff] rounded-lg flex items-center justify-center flex-col p-14 gap-14">
-            <h1 className="font-bold text-2xl">رایگان</h1>
+        <PricingPage />
 
-            <ul>
-              <li>- ۵ تسک ماهانه</li>
-              <li>- یک استارتاپ شکست خورده دیگه</li>
-            </ul>
-
-            <Button className="bg-primary py-2 px-4 rounded-xl font-semibold">
-              ایشالا ماه بعد میخرم
-            </Button>
-          </div>
-
-          <div className="price   rounded-lg flex items-center justify-center flex-col p-14 gap-14 bg-primary ">
-            <h1 className="font-bold text-2xl">۲۳ هزار تومان</h1>
-
-            <ul>
-              <li>- تسک نامحدود</li>
-              <li>- یک دوست به دوستانتون اضافه میشه (سازنده)</li>
-            </ul>
-
-            <Button className="bg-[#ffffff] py-2 px-4 rounded-xl font-semibold">
-              یا علی مدد
-            </Button>
-          </div>
-        </div>
+      
       </div>
     </main>
   );

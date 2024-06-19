@@ -8,7 +8,7 @@ import logo from "../../public/Logo-Trans.png";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="overflow-clip">
+    <div className="overflow-clip flex flex-col justify-center items-center">
       <Head>
         <title>یادم میره</title>
         <link rel="icon" href="/public/Logo-Trans.png" sizes="any" />
