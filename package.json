@@ -2,6 +2,7 @@
   "name": "yadammire",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,6 +12,7 @@
   "dependencies": {
     "@aspianet/faraz-sms": "^1.1.1",
     "@nextui-org/react": "^2.4.1",
+    "@supabase/supabase-js": "^2.43.4",
     "next": "14.2.3",
     "nextui-cli": "^0.3.1",
     "react": "^18",
