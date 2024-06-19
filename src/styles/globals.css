@@ -43,6 +43,13 @@ body {
   border: 0.5px solid;
 }
 
+.gradient-mask-b-4 {
+  mask-image: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1) 30%
+  );
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -96,7 +96,7 @@ export default function PricingPage() {
 
           {bannerText ? (
             <div className="w-full lg:w-auto flex justify-center my-4">
-              <p className="w-full px-4 py-3 text-xs bg-lime-100 text-black dark:bg-lime-300/30 dark:text-white/80 rounded-xl">
+              <p className="w-full px-4 py-3 text-xs bg-lime-100 text-black dark:bg-lime-300/30 dark:text-white/80 roundedsm">
                 {bannerText}
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function PricingPage() {
                   tier.featured
                     ? "bg-primary ring-gray-900 dark:!bg-gray-100 dark:ring-gray-100"
                     : "bg-white dark:bg-gray-900/80 ring-gray-300/70 dark:ring-gray-700",
-                  "max-w-xs ring-1 rounded-3xl p-8 xl:p-10",
+                  "max-w-xs ring-1 rounded-2xl p-8 xl:p-10",
                   tier.highlighted ? styles.fancyGlassContrast : ""
                 )}
               >

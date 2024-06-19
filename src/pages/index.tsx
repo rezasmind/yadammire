@@ -14,11 +14,111 @@ import {
 import bg from "../../public/bg-1.png";
 import PricingPage from "./components/PricingPage";
 
+import { cn } from "@/lib/utils";
+import { AnimatedList } from "./components/animated-list";
+import AvatarCircles from "./components/avatar-circles";
+
+const avatarUrls = [
+  "https://avatars.githubusercontent.com/u/20110627",
+  "https://avatars.githubusercontent.com/u/106103625",
+  "https://avatars.githubusercontent.com/u/59228569",
+];
+
+interface Item {
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  time: string;
+}
+
+let notifications = [
+  {
+    name: "باشگاه یادت نره",
+    description: "ساعت ۱۷ امروز باشگاه تمرین دارم",
+    time: "15m ago",
+
+    icon: "💸",
+    color: "#00C9A7",
+  },
+  {
+    name: "جلسه با آقای احمدی",
+    description: " ساعت ۱۶ کافه رز جلسه قرارداد داری",
+    time: "10m ago",
+
+    icon: "💼",
+    color: "#d63031",
+  },
+
+  {
+    name: "ادیت ویدیو هلدینگ ریزآبادی",
+    description: "       امشب ساعت ۸ باید پستش آپلود شه ادیت ریلزشو بزن",
+    time: "5m ago",
+
+    icon: "💻",
+    color: "#0984e3",
+  },
+];
+
+notifications = Array.from({ length: 10 }, () => notifications).flat();
+
+const Notification = ({ name, description, icon, color, time }: Item) => {
+  return (
+    <figure
+      className={cn(
+        "relative mx-auto min-h-fit w-full z-[99] max-w-[400px] transform cursor-pointer overflow-hidden rounded-2xl p-4 font-peyda",
+        // animation styles
+        "transition-all duration-500 ease-in-out hover:scale-[103%]",
+        // light styles
+        " bg-slate-50 shadow-lg border",
+        // dark styles
+        "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
+      )}
+    >
+      <div className="flex flex-row items-center gap-3 z-99 ">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white"
+          style={{
+            backgroundColor: color,
+          }}
+        >
+          <span className="text-lg flex justify-center items-center">
+            {icon}
+          </span>
+        </div>
+        <div className="flex flex-col overflow-hidden">
+          <figcaption className="flex flex-row items-center whitespace-pre text-lg font-medium dark:text-white ">
+            <span className="text-sm sm:text-lg">{name}</span>
+            <span className="mx-1">·</span>
+            <span className="text-xs text-gray-500">{time}</span>
+          </figcaption>
+          <p className="text-sm font-normal dark:text-white/60">
+            {description}
+          </p>
+        </div>
+      </div>
+    </figure>
+  );
+};
+
+export function AnimatedListDemo() {
+  return (
+    <div className="absolute flex max-h-[400px] top-0 right-0 min-h-[400px] w-full max-w-[32rem] flex-col overflow-hidden rounded-lg  p-6 z-99 to-transparent gradient-mask-b-4">
+      <AnimatedList>
+        {notifications.map((item, idx) => (
+          <Notification {...item} key={idx} />
+        ))}
+      </AnimatedList>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <main className="background-white w-full">
-      <Image src={bg} alt="" className=" absolute" />
-      <Image src={bg} alt="" className=" absolute left-0 top-24" />
+      {AnimatedListDemo()}
+      {/* <Image src={bg} alt="" className=" absolute z-[2]" />
+      <Image src={bg} alt="" className=" absolute left-0 top-24" /> */}
       <div className="hero w-full h-screen flex justify-center items-center flex-col">
         <h1 className="text-center font-peyda font-bold text-[63px] mb-3">
           هرچی یادت رفت <br></br>
@@ -49,7 +149,9 @@ export default function Home() {
         </Button>
 
         <div className="testimonials-1 flex flex-col justify-center items-center gap-2">
-          <Image src={stars} alt="" />
+          <div className="flex gap-0">
+          <AvatarCircles numPeople={321} avatarUrls={avatarUrls} />
+          </div>
           <h1 className="font-peyda">
             <span className=" font-semibold">۳۲۴</span> نفر تا به حال نجات
             یافتند
@@ -122,7 +224,7 @@ export default function Home() {
                   ۱. تسکتو بنویس 📝
                 </AccordionTrigger>
                 <AccordionContent>
-                  هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین. 
+                  هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین.
                 </AccordionContent>
               </AccordionItem>
 
@@ -139,7 +241,7 @@ export default function Home() {
                   ۳. یه تاریخ و ساعتم بده یادآوری کنم 😉
                 </AccordionTrigger>
                 <AccordionContent>
-                  حالا نوبت اینکه بگی چند دقیقه قبلش بهت یادآوری کنم 
+                  حالا نوبت اینکه بگی چند دقیقه قبلش بهت یادآوری کنم
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -171,8 +273,6 @@ export default function Home() {
         </h1>
 
         <PricingPage />
-
-      
       </div>
     </main>
   );
