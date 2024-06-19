@@ -114,7 +114,7 @@ export default function Home() {
                 key="1"
                 aria-label="Accordion 1"
                 title="۱. تسکتو بنویس"
-                className="text-black font-peyda"
+                className="text-black font-peyda "
               >
                 <h1 className="!text-black font-semibold">
                   هیچی میری تو سایت کاری که میخوای بکنی رو مینویسی همین. 📝
@@ -124,7 +124,7 @@ export default function Home() {
                 key="2"
                 aria-label="Accordion 2"
                 title="۲. تاریخ و ساعت انجامش رو بنویس"
-                className="text-primary font-peyda f"
+                className=" font-peyda f"
               >
                 <h1 className="!text-black font-semibold">
                   بعدش مشخص میکنی که تسکت کی باید انجام بشه؟⏰
