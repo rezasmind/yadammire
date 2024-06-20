@@ -10,6 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import iconn from "../../public/icon-message.png"
+
 
 import bg from "../../public/bg-1.png";
 import PricingPage from "./components/PricingPage";
@@ -38,7 +40,7 @@ let notifications = [
     description: "ساعت ۱۷ امروز باشگاه تمرین دارم",
     time: "15m ago",
 
-    icon: "💸",
+    icon: "",
     color: "#00C9A7",
   },
   {
@@ -75,15 +77,12 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
         "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
       )}
     >
-      <div className="flex flex-row items-center gap-3 z-99 ">
+      <div className="flex flex-row items-center gap-1 z-99 ">
         <div
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white"
-          style={{
-            backgroundColor: color,
-          }}
+          className="flex items-center justify-center rounded-2xl "
         >
-          <span className="text-lg flex justify-center items-center">
-            {icon}
+          <span className="text-lg flex p-0 justify-center items-center">
+            <Image src={iconn} alt="" width={65} />
           </span>
         </div>
         <div className="flex flex-col overflow-hidden">
@@ -129,7 +128,7 @@ export default function Home() {
           انرژیتو ذخیره کن برای کارای مهمتر بقیشو بسپار به ما
         </h3>
 
-        <ul className="font-peyda flex-col flex gap-2 mb-6">
+        <ul className="font-peyda flex-col flex gap-2 mb-6 ">
           <li className="flex flex-row">
             <TiTick color="#66D7D1" />
             دیگه کسی نمیفهمه ADHD داری
@@ -166,7 +165,7 @@ export default function Home() {
         </h1>
 
         <div className="boxes w-full flex flex-row justify-center  gap-8">
-          <div className="left w-1/4 bg-primary rounded-xl p-8">
+          <div className="left w-1/4 bg-primary rounded-xl p-8 border">
             <h1 className="font-peyda font-semibold text-2xl">
               ADHD با یادم میره
             </h1>
