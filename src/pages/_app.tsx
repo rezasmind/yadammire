@@ -23,9 +23,9 @@ export default function App({ Component, pageProps }: AppProps) {
           content="با پلتفرم یادم میره شما تسک هاتون دیگه یادتون نمیره! بهترین سرویس برای کسایی که ADHD دارن."
         />
       </Head>
-      <Header />
+  
       <Component {...pageProps} />
-      <Footer />
+
     </div>
   );
 }
