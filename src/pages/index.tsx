@@ -118,7 +118,9 @@ export function AnimatedListDemo() {
 export default function Home() {
   return (
     <main className="background-white w-full">
+      <div className="header w-full flex justify-center items-center">
       <Header />
+      </div>
       {AnimatedListDemo()}
       {/* <Image src={bg} alt="" className=" absolute z-[2]" />
       <Image src={bg} alt="" className=" absolute left-0 top-24" /> */}
