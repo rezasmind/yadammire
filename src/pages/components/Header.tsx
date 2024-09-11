@@ -18,119 +18,77 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { JSX, SVGProps } from "react";
-import logo from "../../../public/Logo-Trans.png"
 
 export default function Header() {
   return (
-    <header className="flex h-20 w-1/3 shrink-0 px-4 md:px-6 items-center justify-between">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="lg:hidden">
-            <MenuIcon className="h-6 w-6" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="bg-white dark:bg-gray-950">
-          <div className="flex h-full max-h-screen flex-col">
-            <div className="flex h-20 items-center justify-between border-b px-6">
+    <div className="w-full flex justify-center items-center">
+      <header className="flex h-20 w-full max-w-6xl px-4 md:px-6 items-center justify-between">
+        <Link
+          href="/"
+          className="flex items-center justify-center gap-2 font-semibold"
+          prefetch={false}
+        >
+          <img src="/images/logo-trans.png" alt="logo" width={50} height={50} />
+        </Link>
+        
+        <NavigationMenu className="hidden lg:flex font-peyda">
+          <NavigationMenuList className="flex flex-row-reverse">
+            <NavigationMenuLink asChild>
               <Link
-                href="#"
-                className="flex items-center gap-2 font-semibold"
+                href="/roadmap"
+                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
                 prefetch={false}
               >
-                <MountainIcon className="h-6 w-6" />
-                <span className="sr-only">Acme Inc</span>
+                رودمپ
               </Link>
-              <SheetClose asChild>
-                <Button variant="outline" size="icon">
-                  <XIcon className="h-6 w-6" />
-                  <span className="sr-only">Close menu</span>
-                </Button>
-              </SheetClose>
-            </div>
-            <nav className=" overflow-auto py-6  ">
-              <div className="grid gap-4 px-6">
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  Home
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  <UserIcon className="h-5 w-5" />
-                  About
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  <PackageIcon className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  <MailIcon className="h-5 w-5" />
-                  Contact
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </SheetContent>
-      </Sheet>
-      <Link
-        href="#"
-        className="mr-6 hidden lg:flex items-center justify-center bg-red gap-2 font-semibold"
-        prefetch={false}
-      >
-        <Image src={logo} alt="logo" width={50}/>
-        
-      </Link>
-      <NavigationMenu className="hidden lg:flex font-peyda">
-        <NavigationMenuList className="flex flex-row-reverse">
-          <NavigationMenuLink asChild>
-            <Link
-              href="#"
-              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-              prefetch={false}
-            >
-              رودمپ
-            </Link>
-          </NavigationMenuLink>
-          <NavigationMenuLink asChild>
-            <Link
-              href="#"
-              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-              prefetch={false}
-            >
-              تعرفه
-            </Link>
-          </NavigationMenuLink>
-          <NavigationMenuLink asChild>
-            <Link
-              href="#"
-              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-              prefetch={false}
-            >
-              تماس با ما
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuList>
-      </NavigationMenu>
+            </NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link
+                href="/#pricing"
+                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+                prefetch={false}
+              >
+                تعرفه
+              </Link>
+            </NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link
+                href="https://t.me/rezasmind"
+                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+                prefetch={false}
+              >
+                تماس با ما
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-      <Button className="font-peyda bg-primary text-black hover:text-white">
-        ورود به پنل
-      </Button>
-    </header>
+        <div className="flex items-center gap-4">
+          <Button className="font-peyda bg-primary text-black hover:text-white hidden lg:inline-flex">
+            <Link href="/auth">ورود به پنل</Link>
+          </Button>
+
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="lg:hidden">
+                <MenuIcon className="h-6 w-6" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <nav className="flex flex-col gap-4 mt-6">
+                <Link href="/roadmap" className="block py-2 text-lg font-peyda">رودمپ</Link>
+                <Link href="/#pricing" className="block py-2 text-lg font-peyda">تعرفه</Link>
+                <Link href="https://t.me/rezasmind" className="block py-2 text-lg font-peyda">تماس با ما</Link>
+                <Button className="font-peyda bg-primary text-black hover:text-white w-full justify-center text-lg py-6">
+                  <Link href="/auth">ورود به پنل</Link>
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </header>
+    </div>
   );
 }
 
@@ -195,7 +153,9 @@ function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   );
 }
 
-function MountainIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function MountainIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
   return (
     <svg
       {...props}

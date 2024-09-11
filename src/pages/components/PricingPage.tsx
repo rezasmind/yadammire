@@ -89,6 +89,7 @@ export default function PricingPage() {
         "flex flex-col w-full items-center font-peyda",
         styles.fancyOverlay
       )}
+      id="pricing"
     >
       <div className="w-full flex flex-col items-center">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col items-center">

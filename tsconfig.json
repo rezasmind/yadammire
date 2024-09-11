@@ -14,7 +14,17 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./src/components/*"],
+      "@/pages/*": ["./src/pages/*"],
+      "@/styles/*": ["./src/styles/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/public/*": ["./public/*"],
+      "@/public/assets/*": ["./public/assets/*"],
+      "@/public/icons/*": ["./public/icons/*"],
+      "@/public/images/*": ["./public/images/*"],
+      "@/public/logos/*": ["./public/logos/*"],
     }
   },
   "awesomeTypescriptLoaderOptions": {

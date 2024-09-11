@@ -10,14 +10,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import iconn from "../../public/icon-message.png"
-
+import iconn from "../../public/icon-message.png";
+import Link from "next/link";
 
 import bg from "../../public/bg-1.png";
 import PricingPage from "./components/PricingPage";
 
 import { cn } from "@/lib/utils";
-import AnimatedList  from "./components/animated-list";
+import AnimatedList from "./components/animated-list";
 import AvatarCircles from "./components/avatar-circles";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -79,11 +79,8 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
         "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
       )}
     >
-          
       <div className="flex flex-row items-center gap-1 z-99 ">
-        <div
-          className="flex items-center justify-center rounded-2xl "
-        >
+        <div className="flex items-center justify-center rounded-2xl ">
           <span className="text-lg flex p-0 justify-center items-center">
             <Image src={iconn} alt="" width={65} />
           </span>
@@ -105,7 +102,7 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
 
 export function AnimatedListDemo() {
   return (
-    <div className="absolute flex max-h-[400px] top-0 right-0 min-h-[400px] w-full max-w-[32rem] flex-col overflow-hidden rounded-lg  p-6 z-99 to-transparent gradient-mask-b-4">
+    <div className="absolute hidden sm:flex max-h-[400px] top-0 right-0 min-h-[400px] w-full max-w-[32rem] flex-col overflow-hidden rounded-lg p-6 z-99 to-transparent gradient-mask-b-4">
       <AnimatedList>
         {notifications.map((item, idx) => (
           <Notification {...item} key={idx} />
@@ -119,22 +116,20 @@ export default function Home() {
   return (
     <main className="background-white w-full">
       <div className="header w-full flex justify-center items-center">
-      <Header />
+        <Header />
       </div>
       {AnimatedListDemo()}
-      {/* <Image src={bg} alt="" className=" absolute z-[2]" />
-      <Image src={bg} alt="" className=" absolute left-0 top-24" /> */}
-      <div className="hero w-full h-screen flex justify-center items-center flex-col">
-        <h1 className="text-center font-peyda font-bold text-[63px] mb-3">
+      <div className="hero w-full min-h-screen flex justify-center items-center flex-col px-4 py-12 sm:py-24">
+        <h1 className="text-center font-peyda font-bold text-4xl sm:text-5xl mb-3">
           هرچی یادت رفت <br></br>
           <span className="text-primary "> ما یادمون میمونه! </span>
         </h1>
 
-        <h3 className="font-peyda mb-6">
+        <h3 className="font-peyda mb-6 text-center text-lg sm:text-xl">
           انرژیتو ذخیره کن برای کارای مهمتر بقیشو بسپار به ما
         </h3>
 
-        <ul className="font-peyda flex-col flex gap-2 mb-6 ">
+        <ul className="font-peyda flex-col flex gap-2 mb-6 text-center">
           <li className="flex flex-row">
             <TiTick color="#66D7D1" />
             دیگه کسی نمیفهمه ADHD داری
@@ -150,12 +145,12 @@ export default function Home() {
         </ul>
 
         <Button className="bg-primary font-peyda py-2 px-4 rounded-lg mb-6">
-          شروع نه به فراموشی
+          <Link href="/auth">شروع نه به فراموشی</Link>
         </Button>
 
         <div className="testimonials-1 flex flex-col justify-center items-center gap-2">
           <div className="flex gap-0">
-          <AvatarCircles numPeople={321} avatarUrls={avatarUrls} />
+            <AvatarCircles numPeople={321} avatarUrls={avatarUrls} />
           </div>
           <h1 className="font-peyda">
             <span className=" font-semibold">۳۲۴</span> نفر تا به حال نجات
@@ -164,14 +159,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="hero2 w-full mb-24 flex justify-center items-center flex-col">
-        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+      <div className="hero2 w-full mb-12 sm:mb-24 flex justify-center items-center flex-col px-4">
+        <h1 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
           خسته شدی از بس بابت فراموشیت{" "}
           <span className="text-primary">عذرخواهی</span> کردی؟
         </h1>
 
-        <div className="boxes w-full flex flex-row justify-center  gap-8">
-          <div className="left w-1/4 bg-primary rounded-xl p-8 border">
+        <div className="boxes w-full flex flex-col sm:flex-row justify-center gap-8">
+          <div className="left w-full sm:w-1/2 bg-primary rounded-xl p-6 sm:p-8 border">
             <h1 className="font-peyda font-semibold text-2xl">
               ADHD با یادم میره
             </h1>
@@ -183,7 +178,7 @@ export default function Home() {
               <li>-سر تایم پروژه هاتو تحویل میدی</li>
             </ul>
           </div>
-          <div className="right w-1/4 bg-[#e6e6e6] rounded-xl p-8">
+          <div className="right w-full sm:w-1/2 bg-[#e6e6e6] rounded-xl p-6 sm:p-8">
             <h1 className="font-peyda font-semibold text-2xl">
               ADHD بدون یادم میره
             </h1>
@@ -198,11 +193,11 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="testimonial-2 w-full flex flex-col mb-12">
+      <div className="testimonial-2 w-full flex flex-col mb-12 px-4">
         <div className="testimonials-1 flex flex-col justify-center items-center gap-3">
           <Image src={stars} alt="" />
           <h1 className="font-peyda max-w-lg text-center text-lg font-semibold">
-            با ۶ تا بچه دیگه داشت اسممو یادم میرفت تا اینکه با سرویس یادم میره
+            با ۶ تا بچه دیگه داشت اسممو یادم رفت تا اینکه با سرویس یادم میره
             آشنا شدم و تسکامو بهش دادم تا با هوش مصنوعی فوق پیشرفتش بهم یادآوری
             کنه.
           </h1>
@@ -216,13 +211,13 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="hero2 w-full mb-24 mt-24 h-[48vh] flex justify-center items-center flex-col">
-        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+      <div className="hero2 w-full mb-12 sm:mb-24 flex justify-center items-center flex-col px-4">
+        <h1 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
           این <span className="text-primary">۳ تا کار</span> نجاتت میده!
         </h1>
 
-        <div className="sections w-screen flex flex-row justify-center items-center">
-          <div className="right w-1/4">
+        <div className="sections w-full flex flex-col sm:flex-row justify-center items-center">
+          <div className="right w-full sm:w-1/2">
             <Accordion type="single" collapsible className="font-peyda">
               <AccordionItem value="item-1">
                 <AccordionTrigger className="font-semibold">
@@ -254,7 +249,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="testimonial-2 w-full flex flex-col mb-12">
+      <div className="testimonial-2 w-full flex flex-col mb-12 px-4">
         <div className="testimonials-1 flex flex-col justify-center items-center gap-3">
           <Image src={stars} alt="" />
           <h1 className="font-peyda max-w-lg text-center text-lg font-semibold">
@@ -272,8 +267,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pricing-section w-full  mt-24 bg-[#f7f7f7] flex flex-col justify-center items-center p-14">
-        <h1 className="font-peyda font-bold text-[32px]  mb-6">
+      <div className="pricing-section w-full mt-12 sm:mt-24 bg-[#f7f7f7] flex flex-col justify-center items-center p-8 sm:p-14">
+        <h1 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
           با یادم میره <span className="text-primary">فراموشی</span> یک توهمه 😉
         </h1>
 
@@ -281,6 +276,5 @@ export default function Home() {
       </div>
       <Footer />
     </main>
-    
   );
 }

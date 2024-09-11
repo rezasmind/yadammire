@@ -5,8 +5,10 @@ const nextConfig = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     JWT_SECRET: process.env.JWT_SECRET,
-    // ... other environment variables
   },
-}
+  images: {
+    domains: ["avatars.githubusercontent.com"],
+  },
+};
 
 export default nextConfig;

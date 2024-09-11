@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "../styles/globals.css";
 import Head from "next/head";
 
 import type { AppProps } from "next/app";
@@ -8,12 +8,11 @@ import logo from "../../public/Logo-Trans.png";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="overflow-clip flex flex-col justify-center items-center">
+    <div className="overflow-clip flex flex-col justify-center items-center font-peyda">
       <Head>
         <title>یادم میره</title>
-        <link rel="icon" href="/public/Logo-Trans.png" sizes="any" />
+        <link rel="icon" href="/images/Logo-Trans.png" sizes="any" />
         <meta name="enamad" content="39719853" />
-
         <meta
           name="description"
           content="با پلتفرم یادم میره شما تسک هاتون دیگه یادتون نمیره! بهترین سرویس برای کسایی که ADHD دارن."
@@ -24,9 +23,8 @@ export default function App({ Component, pageProps }: AppProps) {
           content="با پلتفرم یادم میره شما تسک هاتون دیگه یادتون نمیره! بهترین سرویس برای کسایی که ADHD دارن."
         />
       </Head>
-  
-      <Component {...pageProps} />
 
+      <Component {...pageProps} />
     </div>
   );
 }
