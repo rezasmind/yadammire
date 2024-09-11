@@ -11,7 +11,7 @@ const Roadmap: React.FC = () => {
         <meta name="description" content="نقشه راه پلتفرم یادم میره" />
       </Head>
 
-      <Header showLogo={true} />
+      <Header />
 
       <main className="flex-grow container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold mb-12 text-center">نقشه راه</h1>
