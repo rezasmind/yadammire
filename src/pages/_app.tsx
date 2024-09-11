@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>یادم میره</title>
         <link rel="icon" href="/public/Logo-Trans.png" sizes="any" />
+        <meta name="enamad" content="39719853" />
 
         <meta
           name="description"
