@@ -4,7 +4,6 @@ import axios from 'axios';
 import { Button } from "@nextui-org/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import logo from "../../public/Logo-Trans.png";
 
 interface Plan {
   id: string;
@@ -103,8 +102,8 @@ export default function Subscription() {
             )}
           </div>
           <div className="flex items-center">
-            <Image
-              src={logo}
+            <img
+              src="/images/Logo-Trans.png"
               alt="لوگو"
               width={40}
               height={40}

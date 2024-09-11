@@ -13,7 +13,6 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { format } from "date-fns-jalali";
 import { Button } from "@nextui-org/react";
-import logo from "../../../public/Logo-Trans.png";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import Notification from 'src/pages/components/notification';
@@ -252,8 +251,8 @@ export default function Dashboard() {
             )}
           </div>
           <div className="flex items-center">
-            <Image
-              src={logo}
+            <img
+              src="/images/Logo-Trans.png"
               alt="لوگو"
               width={40}
               height={40}
