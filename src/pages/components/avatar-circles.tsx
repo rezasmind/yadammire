@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import React from "react";
+import Image from 'next/image';
 
 interface AvatarCirclesProps {
   className?: string;
@@ -28,13 +29,13 @@ const AvatarCircles = ({
         +۳۲۱
       </a>
       {avatarUrls?.map((url, index) => (
-        <img
+        <Image
           key={index}
-          className="h-10 w-10 rounded-full border-2 border-white dark:border-gray-800"
           src={url}
+          alt={`Avatar ${index + 1}`}
           width={40}
           height={40}
-          alt={`Avatar ${index + 1}`}
+          className="w-10 h-10 rounded-full"
         />
       ))}
     </div>

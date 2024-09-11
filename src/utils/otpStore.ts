@@ -1,4 +1,6 @@
-import { supabase } from "@/lib/supabase"; // Adjust according to your Supabase setup
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 export async function storeOTP(phoneNumber: string, otp: string) {
   const expirationTime = new Date(Date.now() + 300000); // 5 minutes from now

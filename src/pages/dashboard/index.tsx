@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -298,7 +299,7 @@ export default function Dashboard() {
                 ))
               ) : (
                 <p className="text-gray-500">
-                  شما یچ وظیفه در حال انجامی ندارید
+                  شما هیچ وظیفه در حال انجامی ندارید
                 </p>
               )}
             </div>

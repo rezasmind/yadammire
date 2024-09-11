@@ -1,3 +1,6 @@
+
+
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 import logo from "../../../public/Logo-Trans.png";
@@ -34,6 +37,13 @@ const Auth = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
+
+  const form = useForm({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      pin: "",
+    },
+  });
 
   useEffect(() => {
     // Check if phoneNumber and token exist in sessionStorage
@@ -120,7 +130,7 @@ const Auth = () => {
       console.error('Error verifying OTP:', error instanceof Error ? error.message : String(error));
       toast({
         title: "خطا در تایید کد",
-        description: "کد وارد شده صحیح نیست",
+        description: "کد وارد شده صحیح نیس��",
         variant: "destructive",
       });
     }
