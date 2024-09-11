@@ -16,7 +16,7 @@ import { Button } from "@nextui-org/react";
 import logo from "../../../public/Logo-Trans.png";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
-import { Notification } from "../components/notification";
+import Notification from 'src/pages/components/notification';
 import moment from "moment-jalaali";
 import "moment-timezone";
 import { toGregorian } from "jalaali-js";
