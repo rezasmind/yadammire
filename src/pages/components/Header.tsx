@@ -127,7 +127,7 @@ export default function Header() {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <Button className="font-peyda bg-primary text-black">
+      <Button className="font-peyda bg-primary text-black hover:text-white">
         ورود به پنل
       </Button>
     </header>

@@ -1,0 +1,43 @@
+/* styles/datepicker.css */
+
+.rmdp-container {
+    width: 100%;
+  }
+  
+  .rmdp-input {
+    width: 100%;
+    padding-right: 2.5rem !important;
+  }
+  
+  .rmdp-calendar {
+    width: 100%;
+    font-family: 'your-persian-font', sans-serif;
+  }
+  
+  .rmdp-day, .rmdp-week-day {
+    font-size: 0.9rem;
+    height: 34px;
+    width: 34px;
+  }
+  
+  .rmdp-header-values {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .rmdp-arrow {
+    border-color: #4a5568;
+  }
+  
+  .rmdp-arrow-container:hover {
+    background-color: #edf2f7;
+    box-shadow: 0 0 3px #8a8a8a;
+  }
+  
+  .rmdp-selected span {
+    background-color: #3182ce !important;
+  }
+  
+  .rmdp-day:not(.rmdp-disabled):not(.rmdp-day-hidden) span:hover {
+    background-color: #bee3f8 !important;
+  }
