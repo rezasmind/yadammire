@@ -9,7 +9,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Add this line to get the base URL of your application
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://yadammire.ir";
 
 export default async function handler(
   req: NextApiRequest,
