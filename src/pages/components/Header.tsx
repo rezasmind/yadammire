@@ -18,7 +18,7 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { JSX, SVGProps } from "react";
-import logo from "@/public/images/logo-trans.png"
+
 
 export default function Header() {
   return (
@@ -29,7 +29,7 @@ export default function Header() {
           className="flex items-center justify-center gap-2 font-semibold"
           prefetch={false}
         >
-          <Image src={logo} alt="logo" width={50} height={50} />
+          <Image src={`/images/logo-trans.png`} alt="logo" width={50} height={50} />
         </Link>
         
         <NavigationMenu className="hidden lg:flex font-peyda">

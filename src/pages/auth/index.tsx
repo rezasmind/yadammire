@@ -22,8 +22,6 @@ import { z } from "zod";
 import { useRouter } from "next/router";
 import { toast } from "@/components/ui/use-toast";
 import Header from "../components/Header";
-import logo from "@/public/images/logo-trans.png"
-
 
 const FormSchema = z.object({
   pin: z.string().length(6, {
@@ -65,7 +63,7 @@ const Auth = () => {
 
   const validatePhoneNumber = (phone: string) => {
     if (!phone.startsWith("09")) {
-      setError("شماره باید با ۰۹ شروع شود");
+      setError("شماره باید با ۰۹ روع شود");
     } else if (phone.length !== 11) {
       setError("شماره باید ۱۱ رقم باشد");
     } else {
@@ -89,7 +87,7 @@ const Auth = () => {
         setShowOtp(true);
         toast({
           title: "کد تایید ارسال شد",
-          description: "لطفا کد ارسال شده را وارد کنید",
+          description: "لطفا کد ارسال شده ر وارد کنید",
         });
       }
     } catch (error: unknown) {
@@ -247,7 +245,7 @@ const Auth = () => {
       >
         <div className="left w-full md:w-1/2 h-[20vh] md:h-screen bg-primary flex justify-center items-center">
           <Image
-            src={logo}
+            src={`/images/logo-trans.png`}
             alt="Logo"
             width={200}
             height={200}
