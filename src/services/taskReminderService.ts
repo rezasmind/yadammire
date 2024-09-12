@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const SMS_API_URL = process.env.SMS_API_URL as string;
@@ -13,21 +13,23 @@ const SMS_PATTERN_CODE = "2z3m7hoi9aqugau";
 
 async function sendSms(phoneNumber: string, title: string) {
   try {
-    const smsResponse = await axios.post(SMS_API_URL, {
-      op: "pattern",
-      user: SMS_USERNAME,
-      pass: SMS_PASSWORD,
-      fromNum: SMS_FROM_NUMBER,
-      toNum: phoneNumber,
-      patternCode: SMS_PATTERN_CODE,
-      inputData: [
-        { title: title }
-      ]
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
+    const smsResponse = await axios.post(
+      SMS_API_URL,
+      {
+        op: "pattern",
+        user: SMS_USERNAME,
+        pass: SMS_PASSWORD,
+        fromNum: SMS_FROM_NUMBER,
+        toNum: phoneNumber,
+        patternCode: SMS_PATTERN_CODE,
+        inputData: [{ title: title }],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
     console.log("SMS sent successfully:", smsResponse.data);
     return smsResponse.data;
@@ -39,7 +41,7 @@ async function sendSms(phoneNumber: string, title: string) {
 
 export async function checkAndSendReminders() {
   const now = new Date();
-  const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60000);
+  const fiveMinutesFromNow = new Date(now.getTime() + 1 * 60000);
 
   try {
     const { data: tasks, error } = await supabase
@@ -57,17 +59,17 @@ export async function checkAndSendReminders() {
     for (const task of tasks) {
       try {
         await sendSms(task.phone, task.title);
-        
+
         const { error: updateError } = await supabase
           .from("Tasks")
           .update({ sms_sent: true })
-          .eq('id', task.id);
+          .eq("id", task.id);
 
         if (updateError) {
-          console.error('Error updating SMS sent status:', updateError);
+          console.error("Error updating SMS sent status:", updateError);
         }
       } catch (smsError) {
-        console.error('Error sending SMS for task:', task.id, smsError);
+        console.error("Error sending SMS for task:", task.id, smsError);
       }
     }
   } catch (error) {
