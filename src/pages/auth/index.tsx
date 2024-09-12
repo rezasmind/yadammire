@@ -282,8 +282,8 @@ const Auth = () => {
         dir="rtl"
       >
         <div className="left w-full md:w-1/2 h-[20vh] md:h-screen bg-primary flex justify-center items-center">
-          <Image
-            src={`/images/logo-trans.png`}
+          <img
+            src={`/logo-trans.png`}
             alt="Logo"
             width={200}
             height={200}
