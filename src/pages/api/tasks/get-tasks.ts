@@ -20,18 +20,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: tasks, error } = await supabase
       .from("Tasks")
       .select("*")
-      .eq("phone", phoneNumber);
+      .eq("phone", phoneNumber)
+      .order("date", { ascending: true });
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
-    if (!tasks || tasks.length === 0) {
-      return res.status(200).json({ message: "شما هیچ وظیفه‌ای ندارید", tasks: [] });
-    }
-
-    const ongoingTasks = tasks.filter(task => !task.status);
-    const doneTasks = tasks.filter(task => task.status);
+    const ongoingTasks = tasks.filter((task) => !task.smsSent);
+    const doneTasks = tasks.filter((task) => task.smsSent);
 
     res.status(200).json({ ongoingTasks, doneTasks });
   } catch (error) {

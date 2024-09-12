@@ -3,13 +3,17 @@ import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { toJalaali } from "jalaali-js";
 
-// Use non-public environment variables for server-side code
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Add this line to get the base URL of your application
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://yadammire.ir";
+
+const SMS_API_URL = process.env.SMS_API_URL as string;
+const SMS_USERNAME = process.env.SMS_USERNAME as string;
+const SMS_PASSWORD = process.env.SMS_PASSWORD as string;
+const SMS_FROM_NUMBER = process.env.SMS_FROM_NUMBER as string;
+const SMS_PATTERN_CODE = "2z3m7hoi9aqugau";
 
 export default async function handler(
   req: NextApiRequest,
@@ -104,6 +108,7 @@ export default async function handler(
           date: taskDate.toISOString(),
           phone: phoneNumber,
           status: false,
+          sms_sent: false,
         },
       ])
       .select();
@@ -124,23 +129,7 @@ export default async function handler(
         .json({ message: "Task was not inserted properly" });
     }
 
-    // Schedule the reminder
-    try {
-      const reminderResponse = await axios.post(
-        `${BASE_URL}/api/tasks/reminding`,
-        {
-          taskId: data[0].id,
-          title,
-          phoneNumber,
-          reminderTime: taskDate.toISOString(),
-        }
-      );
-
-      console.log("Reminder scheduling response:", reminderResponse.data);
-    } catch (reminderError) {
-      console.error("Error scheduling reminder:", reminderError);
-      // Don't throw here, we still want to return the created task
-    }
+    // حذف کد setTimeout و ارسال SMS از اینجا
 
     res.status(200).json({ message: "Task created successfully", data, hasSubscription });
   } catch (error: unknown) {
@@ -156,3 +145,5 @@ export default async function handler(
       });
   }
 }
+
+// حذف تابع sendSms از اینجا

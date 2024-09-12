@@ -6,19 +6,24 @@ import {
   Cog6ToothIcon,
   CalendarIcon,
   ClockIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { format } from "date-fns-jalali";
-import { Button } from "@nextui-org/react";
+import { Button, Modal, Input, Textarea } from "@nextui-org/react";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import Notification from "src/pages/components/notification";
 import moment from "moment-jalaali";
 import "moment-timezone";
 import { toGregorian } from "jalaali-js";
+import { User } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 interface Task {
   id: number;
@@ -46,6 +51,9 @@ export default function Dashboard() {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showSubscriptionSuccessModal, setShowSubscriptionSuccessModal] =
     useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<number | null>(null);
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -58,6 +66,7 @@ export default function Dashboard() {
       setPhoneNumber(storedPhoneNumber);
       fetchTasks(storedPhoneNumber);
       checkSubscriptionStatus(storedPhoneNumber);
+      checkSubscription();
     }
 
     // Check if the subscription was just updated
@@ -68,6 +77,25 @@ export default function Dashboard() {
       router.replace("/dashboard", undefined, { shallow: true });
     }
   }, [router]);
+
+  useEffect(() => {
+    if (phoneNumber) {
+      checkSubscription();
+    }
+  }, [phoneNumber]);
+
+  const checkSubscription = async () => {
+    try {
+      // Remove the leading zero if present
+      const formattedPhoneNumber = phoneNumber.startsWith('0') ? phoneNumber.slice(1) : phoneNumber;
+      const response = await fetch(`/api/user/check-subscription?phoneNumber=${formattedPhoneNumber}`);
+      const result = await response.json();
+      setSubscriptionStatus(result.hasSubscription ? "اشتراک فعال" : "رایگان");
+      setSubscriptionDaysLeft(result.daysLeft);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
 
   const checkSubscriptionStatus = async (phoneNumber: string) => {
     try {
@@ -218,6 +246,53 @@ export default function Dashboard() {
     }
   };
 
+  const handleEditTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTask) return;
+
+    try {
+      const response = await axios.put(`/api/tasks/update-task`, {
+        id: editingTask.id,
+        title: editingTask.title,
+        description: editingTask.description,
+        date: editingTask.date,
+        phoneNumber: phoneNumber,
+      });
+
+      if (response.status === 200) {
+        setShowEditModal(false);
+        fetchTasks(phoneNumber);
+        setNotificationMessage("وظیفه با موفقیت ویرایش شد");
+        setShowNotification(true);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+      toast({
+        title: "خطا در ویرایش وظیفه",
+        description: "لطفا دوباره تلاش کنید.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveTask = async (taskId: number) => {
+    try {
+      const response = await axios.delete(`/api/tasks/delete-task?id=${taskId}`);
+      if (response.status === 200) {
+        fetchTasks(phoneNumber);
+        setNotificationMessage("وظیفه با موفقیت حذف شد");
+        setShowNotification(true);
+      }
+    } catch (error) {
+      console.error("Error removing task:", error);
+      toast({
+        title: "خطا در حذف وظیفه",
+        description: "لطفا دوباره تلاش کنید.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen" dir="rtl">
       <header className="w-screen font-peyda bg-gray-100 px-2 sm:px-4 py-3 flex justify-between items-center shadow-sm">
@@ -239,6 +314,11 @@ export default function Dashboard() {
                       {subscriptionStatus}
                     </span>
                   </p>
+                  {subscriptionStatus === "اشتراک فعال" && subscriptionDaysLeft !== null && (
+                    <p className="mb-2 text-sm text-gray-600">
+                      روزهای باقی‌مانده: <span className="font-semibold text-gray-800">{subscriptionDaysLeft}</span>
+                    </p>
+                  )}
                   {subscriptionStatus === "رایگان" && (
                     <Button
                       onClick={() => router.push("/subscription")}
@@ -303,9 +383,6 @@ export default function Dashboard() {
                       <span className="text-primary font-medium">
                         مهلت: {task.date}
                       </span>
-                      <Button className="text-blue-500 hover:text-blue-700 transition-colors duration-300">
-                        ویرایش
-                      </Button>
                     </div>
                   </div>
                 ))
@@ -433,6 +510,94 @@ export default function Dashboard() {
                     </Button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Task Modal */}
+          {showEditModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-peyda">
+              <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold">ویرایش وظیفه</h2>
+                </div>
+                <div className="mb-4">
+                  <form onSubmit={handleEditTask} className="space-y-4">
+                    <div>
+                      <label htmlFor="taskTitle" className="block text-sm font-medium text-gray-700 mb-1">
+                        عنوان وظیفه
+                      </label>
+                      <input
+                        id="taskTitle"
+                        type="text"
+                        value={editingTask?.title || ""}
+                        onChange={(e) =>
+                          setEditingTask((prev) =>
+                            prev ? { ...prev, title: e.target.value } : null
+                          )
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="taskDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                        توضیحات وظیفه
+                      </label>
+                      <textarea
+                        id="taskDescription"
+                        value={editingTask?.description || ""}
+                        onChange={(e) =>
+                          setEditingTask((prev) =>
+                            prev ? { ...prev, description: e.target.value } : null
+                          )
+                        }
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        rows={3}
+                        required
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        تاریخ و زمان
+                      </label>
+                      <DatePicker
+                        value={editingTask?.date ? new DateObject(editingTask.date) : null}
+                        onChange={(date) =>
+                          setEditingTask((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  date: (date as DateObject).format("YYYY-MM-DD HH:mm:ss"),
+                                }
+                              : null
+                          )
+                        }
+                        calendar={persian}
+                        locale={persian_fa}
+                        calendarPosition="bottom-right"
+                        plugins={[<TimePicker position="bottom" />]}
+                        format="YYYY/MM/DD HH:mm:ss"
+                        inputClass="w-full p-2 pr-10 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        containerClassName="w-full"
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  >
+                    لغو
+                  </button>
+                  <button
+                    onClick={handleEditTask}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    ذخیره تغییرات
+                  </button>
+                </div>
               </div>
             </div>
           )}
