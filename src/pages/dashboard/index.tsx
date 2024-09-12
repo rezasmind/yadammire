@@ -218,37 +218,37 @@ export default function Dashboard() {
               تنظیمات
             </Button>
             {showPopup && (
-              <div className="absolute right-0 mt-2 w-full sm:w-64 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
-                <div className="p-3">
-                  <p className="mb-2 text-xs text-gray-600">
-                    وضعیت اشتراک:{" "}
-                    <span className="font-semibold text-gray-800">
-                      {subscriptionStatus}
-                    </span>
-                  </p>
-                  {subscriptionStatus === "رایگان" && (
-                    <Button
-                      onClick={() => router.push("/subscription")}
-                      className="bg-primary font-peyda py-1 px-3 rounded-lg mb-2 w-full hover:bg-opacity-90 transition duration-300 text-xs sm:text-sm"
-                    >
-                      خرید اشتراک
-                    </Button>
-                  )}
-                  <p className="mb-2 text-xs text-gray-600">
-                    شماره تلفن:{" "}
-                    <span className="font-semibold text-gray-800">
-                      {phoneNumber}
-                    </span>
-                  </p>
+            <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
+              <div className="p-4">
+                <p className="mb-2 text-sm text-gray-600">
+                  وضعیت اشتراک:{" "}
+                  <span className="font-semibold text-gray-800">
+                    {subscriptionStatus}
+                  </span>
+                </p>
+                {subscriptionStatus === "رایگان" && (
                   <Button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white font-peyda py-1 px-3 rounded-lg w-full hover:bg-red-600 transition duration-300 text-xs sm:text-sm"
+                    onClick={() => {/* Implement subscription logic */}}
+                    className="bg-primary font-peyda py-2 px-3 rounded-lg mb-3 w-full hover:bg-opacity-90 transition duration-300 text-sm"
                   >
-                    خروج
+                    خرید اشتراک
                   </Button>
-                </div>
+                )}
+                <p className="mb-3 text-sm text-gray-600">
+                  شماره تلفن:{" "}
+                  <span className="font-semibold text-gray-800">
+                    {phoneNumber}
+                  </span>
+                </p>
+                <Button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white font-peyda py-2 px-3 rounded-lg w-full hover:bg-red-600 transition duration-300 text-sm"
+                >
+                  خروج
+                </Button>
               </div>
-            )}
+            </div>
+          )}
           </div>
           <div className="flex items-center">
             <img

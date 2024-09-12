@@ -240,8 +240,6 @@ const Auth = () => {
 
   return (
     <div className="w-screen">
-      <Header />
-
       <div
         className="main w-full h-screen flex flex-col-reverse md:flex-row-reverse justify-center items-center"
         dir="rtl"
@@ -250,8 +248,7 @@ const Auth = () => {
           <img
             src="/images/logo-trans.png"
             alt=""
-            width={200}
-            className="max-w-full h-auto"
+            className="max-w-full h-auto w-[200px]"
           />
         </div>
 
