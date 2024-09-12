@@ -21,11 +21,11 @@ const Footer = () => {
         </div>
 
         <div className="social-media flex flex-row gap-4">
-          <Link href={"instagram.com/rezasmind"}>
+          <Link href={"https://instagram.com/rezasmind"}>
             <FaInstagram color="#66D7D1" size={20} />
           </Link>
 
-          <Link href={"twitter.com/rezasmind"}>
+          <Link href={"https://twitter.com/rezasmind"}>
             <TbBrandTwitter color="#66D7D1" size={20} />
           </Link>
         </div>
