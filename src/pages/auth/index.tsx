@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
-import logo from "../../../public/Logo-Trans.png";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
@@ -23,6 +22,8 @@ import { z } from "zod";
 import { useRouter } from "next/router";
 import { toast } from "@/components/ui/use-toast";
 import Header from "../components/Header";
+import logo from "@/public/images/logo-trans.png"
+
 
 const FormSchema = z.object({
   pin: z.string().length(6, {
@@ -245,10 +246,12 @@ const Auth = () => {
         dir="rtl"
       >
         <div className="left w-full md:w-1/2 h-[20vh] md:h-screen bg-primary flex justify-center items-center">
-          <img
-            src="/images/logo-trans.png"
-            alt=""
-            className="max-w-full h-auto w-[200px]"
+          <Image
+            src={logo}
+            alt="Logo"
+            width={200}
+            height={200}
+            className="max-w-full h-auto"
           />
         </div>
 

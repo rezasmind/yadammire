@@ -18,17 +18,18 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { JSX, SVGProps } from "react";
+import logo from "@/public/images/logo-trans.png"
 
 export default function Header() {
   return (
     <div className="w-full flex justify-center items-center">
-      <header className="flex h-20 w-full max-w-6xl px-4 md:px-6 items-center justify-between">
+      <header className="flex h-20 w-full max-w-2xl px-4 md:px-6 items-center justify-between">
         <Link
           href="/"
           className="flex items-center justify-center gap-2 font-semibold"
           prefetch={false}
         >
-          <img src="/images/logo-trans.png" alt="logo" width={50} height={50} />
+          <Image src={logo} alt="logo" width={50} height={50} />
         </Link>
         
         <NavigationMenu className="hidden lg:flex font-peyda">
