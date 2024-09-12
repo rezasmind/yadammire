@@ -22,10 +22,13 @@ import { z } from "zod";
 import { useRouter } from "next/router";
 import { toast } from "@/components/ui/use-toast";
 import Header from "../components/Header";
+import OtpInput from "react-otp-input";
 
 const FormSchema = z.object({
-  pin: z.string().length(6, {
-    message: "کد یک بار مصرف باید ۶ رقمی باشد",
+  otp: z.string().min(6, {
+    message: "لطفا کد ۶ رقمی را وارد کنید",
+  }).max(6, {
+    message: "کد باید دقیقا ۶ رقم باشد",
   }),
 });
 
@@ -35,11 +38,20 @@ const Auth = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
+  const [otp, setOtp] = useState("");
 
-  const form = useForm({
+  console.log(otp);
+
+  const phoneForm = useForm({
+    defaultValues: {
+      phoneNumber: "",
+    },
+  });
+
+  const otpForm = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      pin: "",
+      otp: "",
     },
   });
 
@@ -116,14 +128,19 @@ const Auth = () => {
         }
       );
       if (response.status === 200) {
-        const { token, phoneNumber, userId } = response.data;
-        // Store token, phone number, and userId in session storage
+        const { token, phoneNumber, userId, subscriptionStatus } =
+          response.data;
+        // Store token, phone number, userId, and subscriptionStatus in session storage
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("phoneNumber", phoneNumber);
         sessionStorage.setItem("userId", userId);
+        sessionStorage.setItem(
+          "subscriptionStatus",
+          subscriptionStatus.toString()
+        );
         toast({
           title: "ورود موفق",
-          description: "به زودی به صفحه اصلی منتقل می‌شید",
+          description: "به زودی به صفحه اصلی منتقل می‌شوید",
         });
         router.push("/dashboard");
       }
@@ -134,7 +151,7 @@ const Auth = () => {
       );
       toast({
         title: "خطا در تایید کد",
-        description: "کد وارد شده صحیح نیس",
+        description: "کد وارد شده صحیح نیست",
         variant: "destructive",
       });
     }
@@ -151,9 +168,23 @@ const Auth = () => {
     router.push("/dashboard");
   };
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    verifyOtp(data.pin);
-  }
+  const handlePhoneSubmit = async (data: { phoneNumber: string }) => {
+    if (!error) {
+      try {
+        await sendOtp();
+        setShowNumber(false);
+        setShowOtp(true);
+        setOtp(""); // Reset the OTP state
+        otpForm.reset(); // Reset the form state
+      } catch (error) {
+        console.error("Error in handlePhoneSubmit:", error);
+      }
+    }
+  };
+
+  const handleOtpSubmit = (data: z.infer<typeof FormSchema>) => {
+    verifyOtp(data.otp);
+  };
 
   const render = () => {
     return (
@@ -165,28 +196,44 @@ const Auth = () => {
               برای ورود شماره تلفن همراه خودتون رو وارد کنید
             </h1>
 
-            <Input
-              type="tel"
-              placeholder="09119993232"
-              dir="rtl"
-              value={number}
-              onChange={handleNumberChange}
-              className="max-w-xs bg-opacity-20 rounded-xl bg-primary text-black border-2 border-primary border-opacity-60 py-2 px-4 text-left"
-            />
-            {error && <p className="text-red-500">{error}</p>}
-
-            <Button
-              className="text-sm bg-primary rounded-xl"
-              onClick={(e) => {
-                e.preventDefault();
-                if (!error) {
-                  sendOtp();
-                }
-              }}
-              disabled={!!error}
-            >
-              ارسال کد
-            </Button>
+            <Form {...phoneForm}>
+              <form
+                onSubmit={phoneForm.handleSubmit(handlePhoneSubmit)}
+                className="w-full flex flex-col items-center gap-4"
+              >
+                <FormField
+                  control={phoneForm.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="09119993232"
+                          dir="rtl"
+                          {...field}
+                          value={number}
+                          onChange={(e) => {
+                            handleNumberChange(e);
+                            field.onChange(e);
+                          }}
+                          className="max-w-xs bg-opacity-20 rounded-xl bg-primary text-black border-2 border-primary border-opacity-60 py-2 px-4 text-left"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {error && <p className="text-red-500">{error}</p>}
+                <Button
+                  type="submit"
+                  className="text-sm bg-primary rounded-xl"
+                  disabled={!!error}
+                >
+                  ارسال کد
+                </Button>
+              </form>
+            </Form>
           </div>
         ) : showOtp ? (
           <div className="form py-8 md:py-16 px-4 md:px-24 border shadow-md border-opacity-50 bg-[#fff] rounded-lg flex items-center justify-center font-peyda flex-col gap-4">
@@ -195,42 +242,33 @@ const Auth = () => {
               کد یک بار مصرف ارسال شده را وارد کنید
             </h1>
 
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full flex flex-col justify-center space-y-6"
-              >
-                <FormField
-                  control={form.control}
-                  name="pin"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-center justify-center">
-                      <FormControl>
-                        <InputOTP
-                          maxLength={6}
-                          {...field}
-                          className="flex items-center justify-center"
-                        >
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button type="submit" className="text-sm bg-primary rounded-xl">
-                  تایید کد
-                </Button>
-              </form>
-            </Form>
+            <form
+              onSubmit={otpForm.handleSubmit(handleOtpSubmit)}
+              className="w-full flex flex-col justify-center space-y-6"
+            >
+              <OtpInput
+                value={otp}
+                onChange={(value: string) => {
+                  setOtp(value);
+                  otpForm.setValue('otp', value, { shouldValidate: true });
+                }}
+                numInputs={6}
+                renderSeparator={<span className="w-2"></span>}
+                renderInput={(props) => <input {...props} />}
+                inputStyle="w-12 h-12 text-center text-2xl border-2 border-primary rounded-md"
+                containerStyle="flex flex-row-reverse justify-center"
+                inputType="tel"
+                shouldAutoFocus={true}
+              />
+              {otpForm.formState.errors.otp && (
+                <p className="text-red-500 text-sm text-center">
+                  {otpForm.formState.errors.otp.message}
+                </p>
+              )}
+              <Button type="submit" className="text-sm bg-primary rounded-xl">
+                تایید کد
+              </Button>
+            </form>
           </div>
         ) : null}
       </div>

@@ -15,7 +15,7 @@ import { format } from "date-fns-jalali";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
-import Notification from 'src/pages/components/notification';
+import Notification from "src/pages/components/notification";
 import moment from "moment-jalaali";
 import "moment-timezone";
 import { toGregorian } from "jalaali-js";
@@ -34,7 +34,9 @@ export default function Dashboard() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [subscriptionStatus, setSubscriptionStatus] = useState("رایگان");
   const [showModal, setShowModal] = useState(false);
-  const [taskDate, setTaskDate] = useState<DateObject | null>(new DateObject({ calendar: persian }));
+  const [taskDate, setTaskDate] = useState<DateObject | null>(
+    new DateObject({ calendar: persian })
+  );
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [ongoingTasks, setOngoingTasks] = useState<Task[]>([]);
@@ -42,7 +44,8 @@ export default function Dashboard() {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showSubscriptionSuccessModal, setShowSubscriptionSuccessModal] = useState(false);
+  const [showSubscriptionSuccessModal, setShowSubscriptionSuccessModal] =
+    useState(false);
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -59,17 +62,21 @@ export default function Dashboard() {
 
     // Check if the subscription was just updated
     const { subscriptionUpdated } = router.query;
-    if (subscriptionUpdated === 'true') {
+    if (subscriptionUpdated === "true") {
       setShowSubscriptionSuccessModal(true);
       // Remove the query parameter
-      router.replace('/dashboard', undefined, { shallow: true });
+      router.replace("/dashboard", undefined, { shallow: true });
     }
   }, [router]);
 
   const checkSubscriptionStatus = async (phoneNumber: string) => {
     try {
-      const response = await axios.get(`/api/user/subscription?phoneNumber=${phoneNumber}`);
-      setSubscriptionStatus(response.data.hasSubscription ? "اشتراک فعال" : "رایگان");
+      const response = await axios.get(
+        `/api/user/subscription?phoneNumber=${phoneNumber}`
+      );
+      setSubscriptionStatus(
+        response.data.hasSubscription ? "اشتراک فعال" : "رایگان"
+      );
     } catch (error) {
       console.error("Error fetching subscription status:", error);
     }
@@ -134,8 +141,10 @@ export default function Dashboard() {
     }
 
     // Convert Persian date to Gregorian
-    const persianDate = taskDate.format("YYYY/MM/DD HH:mm:ss").replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
-    console.log("this is task date: ",taskDate.format("YYYY/MM/DD HH:mm:ss"))
+    const persianDate = taskDate
+      .format("YYYY/MM/DD HH:mm:ss")
+      .replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 1728));
+    console.log("this is task date: ", taskDate.format("YYYY/MM/DD HH:mm:ss"));
     const [datePart, timePart] = persianDate.split(" ");
     const [pYear, pMonth, pDay] = datePart.split("/").map(Number);
     const [hour, minute, second] = timePart.split(":").map(Number);
@@ -144,7 +153,11 @@ export default function Dashboard() {
     const { gy, gm, gd } = toGregorian(pYear, pMonth, pDay);
 
     // Format the date as a string
-    const formattedDateTime = `${gy}-${gm.toString().padStart(2, '0')}-${gd.toString().padStart(2, '0')} ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
+    const formattedDateTime = `${gy}-${gm.toString().padStart(2, "0")}-${gd
+      .toString()
+      .padStart(2, "0")} ${hour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")}:${second.toString().padStart(2, "0")}`;
 
     // Prepare the task data
     const taskData = {
@@ -218,45 +231,45 @@ export default function Dashboard() {
               تنظیمات
             </Button>
             {showPopup && (
-            <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
-              <div className="p-4">
-                <p className="mb-2 text-sm text-gray-600">
-                  وضعیت اشتراک:{" "}
-                  <span className="font-semibold text-gray-800">
-                    {subscriptionStatus}
-                  </span>
-                </p>
-                {subscriptionStatus === "رایگان" && (
+              <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
+                <div className="p-4">
+                  <p className="mb-2 text-sm text-gray-600">
+                    وضعیت اشتراک:{" "}
+                    <span className="font-semibold text-gray-800">
+                      {subscriptionStatus}
+                    </span>
+                  </p>
+                  {subscriptionStatus === "رایگان" && (
+                    <Button
+                      onClick={() => router.push("/subscription")}
+                      className="bg-primary font-peyda py-2 px-3 rounded-lg mb-3 w-full hover:bg-opacity-90 transition duration-300 text-sm"
+                    >
+                      خرید اشتراک
+                    </Button>
+                  )}
+                  <p className="mb-3 text-sm text-gray-600">
+                    شماره تلفن:{" "}
+                    <span className="font-semibold text-gray-800">
+                      {phoneNumber}
+                    </span>
+                  </p>
                   <Button
-                    onClick={() => {/* Implement subscription logic */}}
-                    className="bg-primary font-peyda py-2 px-3 rounded-lg mb-3 w-full hover:bg-opacity-90 transition duration-300 text-sm"
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white font-peyda py-2 px-3 rounded-lg w-full hover:bg-red-600 transition duration-300 text-sm"
                   >
-                    خرید اشتراک
+                    خروج
                   </Button>
-                )}
-                <p className="mb-3 text-sm text-gray-600">
-                  شماره تلفن:{" "}
-                  <span className="font-semibold text-gray-800">
-                    {phoneNumber}
-                  </span>
-                </p>
-                <Button
-                  onClick={handleLogout}
-                  className="bg-red-500 text-white font-peyda py-2 px-3 rounded-lg w-full hover:bg-red-600 transition duration-300 text-sm"
-                >
-                  خروج
-                </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
           </div>
           <div className="flex items-center">
-            <img
+            <Image
               src="/images/Logo-Trans.png"
               alt="لوگو"
-              width={40}
-              height={40}
-              className="cursor-pointer sm:w-[60px] sm:h-[60px]"
+              width={60}
+              height={60}
+              className="cursor-pointer"
               onClick={() => router.push("/")}
             />
           </div>
@@ -436,8 +449,13 @@ export default function Dashboard() {
       {showSubscriptionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-peyda">
           <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
-            <h2 className="text-xl font-bold mb-4 text-center">محدودیت تعداد وظایف</h2>
-            <p className="text-red-500 mb-4">شما به حداکثر تعداد وظایف مجاز (5 وظیفه) رسیده‌اید. برای ایجاد وظایف بیشتر، لطفا اشتراک تهیه کنید.</p>
+            <h2 className="text-xl font-bold mb-4 text-center">
+              محدودیت تعداد وظایف
+            </h2>
+            <p className="text-red-500 mb-4">
+              شما به حداکثر تعداد وظایف مجاز (5 وظیفه) رسیده‌اید. برای ایجاد
+              وظایف بیشتر، لطفا اشتراک تهیه کنید.
+            </p>
             <button
               onClick={() => router.push("/subscription")}
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
@@ -458,7 +476,9 @@ export default function Dashboard() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-peyda">
           <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
             <h2 className="text-xl font-bold mb-4 text-center">تبریک!</h2>
-            <p className="text-green-500 mb-4">اشتراک شما با موفقیت به نسخه حرفه‌ای ارتقا یافت.</p>
+            <p className="text-green-500 mb-4">
+              اشتراک شما با موفقیت به نسخه حرفه‌ای ارتقا یافت.
+            </p>
             <button
               onClick={() => setShowSubscriptionSuccessModal(false)}
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
