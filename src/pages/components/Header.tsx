@@ -29,7 +29,7 @@ export default function Header() {
           className="flex items-center justify-center gap-2 font-semibold"
           prefetch={false}
         >
-          <img src={`/logo-trans.png`} alt="logo" width={50} height={50} />
+          <img src={`/Logo-Trans.png`} alt="logo" width={50} height={50} />
         </Link>
         
         <NavigationMenu className="hidden lg:flex font-peyda">
