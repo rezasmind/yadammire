@@ -20,7 +20,7 @@ async function sendSms(phoneNumber: string, title: string) {
         user: SMS_USERNAME,
         pass: SMS_PASSWORD,
         fromNum: SMS_FROM_NUMBER,
-        toNum: phoneNumber,
+        toNum: `0${phoneNumber}`,
         patternCode: SMS_PATTERN_CODE,
         inputData: [{ title: title }],
       },
@@ -41,15 +41,13 @@ async function sendSms(phoneNumber: string, title: string) {
 
 export async function checkAndSendReminders() {
   const now = new Date();
-  const fiveMinutesFromNow = new Date(now.getTime() + 1 * 60000);
 
   try {
     const { data: tasks, error } = await supabase
       .from("Tasks")
       .select("id, title, phone, date")
       .eq("sms_sent", false)
-      .gte("date", now.toISOString())
-      .lte("date", fiveMinutesFromNow.toISOString());
+      .lte("date", now.toISOString());
 
     if (error) {
       console.error("Error fetching tasks:", error);
@@ -62,7 +60,7 @@ export async function checkAndSendReminders() {
 
         const { error: updateError } = await supabase
           .from("Tasks")
-          .update({ sms_sent: true })
+          .update({ sms_sent: true, status: true, reminder_sent: true })
           .eq("id", task.id);
 
         if (updateError) {

@@ -51,9 +51,8 @@ export default function Dashboard() {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showSubscriptionSuccessModal, setShowSubscriptionSuccessModal] =
     useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -111,24 +110,38 @@ export default function Dashboard() {
   };
 
   const fetchTasks = async (phoneNumber: string) => {
+    setIsLoading(true);
     try {
+      // Remove the leading zero if present
+      const formattedPhoneNumber = phoneNumber.startsWith('0') ? phoneNumber.slice(1) : phoneNumber;
+      
       const response = await axios.get(
-        `/api/tasks/get-tasks?phoneNumber=${phoneNumber}`
+        `/api/tasks/get-tasks?phoneNumber=${formattedPhoneNumber}`
       );
-      if (response.data.message === "شما هیچ وظیفه‌ای ندارید") {
+      console.log("API response:", response.data);
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const allTasks = response.data;
+        console.log("All tasks:", allTasks);
+        const ongoing = allTasks.filter((task: Task) => !task.status);
+        const done = allTasks.filter((task: Task) => task.status);
+        console.log("Ongoing tasks:", ongoing);
+        console.log("Done tasks:", done);
+        setOngoingTasks(ongoing);
+        setDoneTasks(done);
+      } else {
         setOngoingTasks([]);
         setDoneTasks([]);
-      } else {
-        setOngoingTasks(response.data.ongoingTasks);
-        setDoneTasks(response.data.doneTasks);
       }
     } catch (error) {
       console.error("Error fetching tasks:", error);
       toast({
         title: "خطا در دریافت وظایف",
-        description: "لطفا دوباره تلش کنید.",
+        description: "لطفا دوباره تلاش کنید.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -227,72 +240,6 @@ export default function Dashboard() {
     }
   };
 
-  const sendSms = async (taskData: {
-    phoneNumber: string;
-    title: string;
-    description: string;
-    date: string;
-  }) => {
-    try {
-      const smsResponse = await axios.post("/api/auth/send-otp", {
-        phoneNumber: taskData.phoneNumber,
-        message: `وظیفه جدید: ${taskData.title} - ${taskData.description} در تاریخ ${taskData.date}`,
-      });
-      if (smsResponse.status === 200) {
-        console.log("SMS sent successfully:", smsResponse.data);
-      }
-    } catch (error) {
-      console.error("Error sending SMS:", error);
-    }
-  };
-
-  const handleEditTask = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingTask) return;
-
-    try {
-      const response = await axios.put(`/api/tasks/update-task`, {
-        id: editingTask.id,
-        title: editingTask.title,
-        description: editingTask.description,
-        date: editingTask.date,
-        phoneNumber: phoneNumber,
-      });
-
-      if (response.status === 200) {
-        setShowEditModal(false);
-        fetchTasks(phoneNumber);
-        setNotificationMessage("وظیفه با موفقیت ویرایش شد");
-        setShowNotification(true);
-      }
-    } catch (error) {
-      console.error("Error updating task:", error);
-      toast({
-        title: "خطا در ویرایش وظیفه",
-        description: "لطفا دوباره تلاش کنید.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRemoveTask = async (taskId: number) => {
-    try {
-      const response = await axios.delete(`/api/tasks/delete-task?id=${taskId}`);
-      if (response.status === 200) {
-        fetchTasks(phoneNumber);
-        setNotificationMessage("وظیفه با موفقیت حذف شد");
-        setShowNotification(true);
-      }
-    } catch (error) {
-      console.error("Error removing task:", error);
-      toast({
-        title: "خطا در حذف وظیفه",
-        description: "لطفا دوباره تلاش کنید.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen" dir="rtl">
       <header className="w-screen font-peyda bg-gray-100 px-2 sm:px-4 py-3 flex justify-between items-center shadow-sm">
@@ -361,245 +308,163 @@ export default function Dashboard() {
             داشبورد
           </h1>
 
-          {/* Ongoing Tasks Section */}
-          <section className="mb-6 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
-              وظایف در حال انجام
-            </h2>
-            <div className="space-y-3 sm:space-y-4">
-              {ongoingTasks.length > 0 ? (
-                ongoingTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="bg-white p-3 sm:p-4 rounded-lg shadow-md border border-gray-200"
-                  >
-                    <h3 className="font-semibold text-sm sm:text-base mb-2">
-                      {task.title}
-                    </h3>
-                    <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3">
-                      {task.description}
-                    </p>
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-primary font-medium">
-                        مهلت: {task.date}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">
-                  شما هیچ وظیفه در حال انجامی ندارید
-                </p>
-              )}
-            </div>
-          </section>
-
-          {/* Done Tasks Section */}
-          <section className="mb-6 sm:mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
-              وظایف انجام شده
-            </h2>
-            <div className="space-y-3 sm:space-y-4">
-              {doneTasks.length > 0 ? (
-                doneTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="bg-gray-100 p-3 sm:p-4 rounded-lg shadow-md border border-gray-200"
-                  >
-                    <h3 className="font-medium text-sm sm:text-base text-gray-700 mb-2">
-                      {task.title}
-                    </h3>
-                    <p className="text-gray-500 text-xs sm:text-sm mb-2 sm:mb-3">
-                      {task.description}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      تکمیل شده در: {task.date}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">
-                  شما هیچ وظیفه انجام شده‌ای ندارید
-                </p>
-              )}
-            </div>
-          </section>
-
-          {/* Create Task Button */}
-          <Button
-            onClick={() => setShowModal(true)}
-            className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-full"
-          >
-            ایجاد وظیفه
-          </Button>
-
-          {/* Create Task Modal */}
-          {showModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
-                <h2 className="text-xl font-bold mb-4 text-center">
-                  ایجاد وظیفه جدید
+          {isLoading ? (
+            <p className="text-center">در حال بارگذاری وظایف...</p>
+          ) : (
+            <>
+              {/* Ongoing Tasks Section */}
+              <section className="mb-6 sm:mb-8">
+                <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                  وظایف در حال انجام
                 </h2>
-                <form onSubmit={handleCreateTask} className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="taskTitle"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      عنوان وظیفه
-                    </label>
-                    <input
-                      id="taskTitle"
-                      type="text"
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="عنوان وظیفه را وارد کنید"
-                      value={taskTitle}
-                      onChange={(e) => setTaskTitle(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="taskDescription"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      توضیحات وظیفه
-                    </label>
-                    <textarea
-                      id="taskDescription"
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                      rows={3}
-                      placeholder="توضیحات وظیفه را وارد کنید"
-                      value={taskDescription}
-                      onChange={(e) => setTaskDescription(e.target.value)}
-                      required
-                    ></textarea>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      تاریخ و زمان
-                    </label>
-                    <div className="relative">
-                      <DatePicker
-                        value={taskDate}
-                        onChange={(date) => setTaskDate(date as DateObject)}
-                        calendar={persian}
-                        locale={persian_fa}
-                        calendarPosition="bottom-right"
-                        plugins={[<TimePicker position="bottom" />]}
-                        format="YYYY/MM/DD HH:mm:ss"
-                        inputClass="w-full p-2 pr-10 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        containerClassName="w-full"
-                      />
-                      <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    </div>
-                  </div>
-                  <div className="flex justify-end space-x-2 gap-4">
-                    <Button
-                      type="button"
-                      onClick={() => setShowModal(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                    >
-                      لغو
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      ایجاد
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
+                <div className="space-y-3 sm:space-y-4">
+                  {ongoingTasks.length > 0 ? (
+                    ongoingTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="bg-white p-3 sm:p-4 rounded-lg shadow-md border border-gray-200"
+                      >
+                        <h3 className="font-semibold text-sm sm:text-base mb-2">
+                          {task.title}
+                        </h3>
+                        <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3">
+                          {task.description}
+                        </p>
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-primary font-medium">
+                            مهلت: {task.date}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">
+                      شما هیچ وظیفه در حال انجامی ندارید
+                    </p>
+                  )}
+                </div>
+              </section>
 
-          {/* Edit Task Modal */}
-          {showEditModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-peyda">
-              <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
-                <div className="mb-4">
-                  <h2 className="text-xl font-bold">ویرایش وظیفه</h2>
+              {/* Done Tasks Section */}
+              <section className="mb-6 sm:mb-8">
+                <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+                  وظایف انجام شده
+                </h2>
+                <div className="space-y-3 sm:space-y-4">
+                  {doneTasks.length > 0 ? (
+                    doneTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="bg-gray-100 p-3 sm:p-4 rounded-lg shadow-md border border-gray-200"
+                      >
+                        <h3 className="font-medium text-sm sm:text-base text-gray-700 mb-2">
+                          {task.title}
+                        </h3>
+                        <p className="text-gray-500 text-xs sm:text-sm mb-2 sm:mb-3">
+                          {task.description}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          تکمیل شده در: {task.date}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500">
+                      شما هیچ وظیفه انجام شده‌ای ندارید
+                    </p>
+                  )}
                 </div>
-                <div className="mb-4">
-                  <form onSubmit={handleEditTask} className="space-y-4">
-                    <div>
-                      <label htmlFor="taskTitle" className="block text-sm font-medium text-gray-700 mb-1">
-                        عنوان وظیفه
-                      </label>
-                      <input
-                        id="taskTitle"
-                        type="text"
-                        value={editingTask?.title || ""}
-                        onChange={(e) =>
-                          setEditingTask((prev) =>
-                            prev ? { ...prev, title: e.target.value } : null
-                          )
-                        }
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="taskDescription" className="block text-sm font-medium text-gray-700 mb-1">
-                        توضیحات وظیفه
-                      </label>
-                      <textarea
-                        id="taskDescription"
-                        value={editingTask?.description || ""}
-                        onChange={(e) =>
-                          setEditingTask((prev) =>
-                            prev ? { ...prev, description: e.target.value } : null
-                          )
-                        }
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        rows={3}
-                        required
-                      ></textarea>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        تاریخ و زمان
-                      </label>
-                      <DatePicker
-                        value={editingTask?.date ? new DateObject(editingTask.date) : null}
-                        onChange={(date) =>
-                          setEditingTask((prev) =>
-                            prev
-                              ? {
-                                  ...prev,
-                                  date: (date as DateObject).format("YYYY-MM-DD HH:mm:ss"),
-                                }
-                              : null
-                          )
-                        }
-                        calendar={persian}
-                        locale={persian_fa}
-                        calendarPosition="bottom-right"
-                        plugins={[<TimePicker position="bottom" />]}
-                        format="YYYY/MM/DD HH:mm:ss"
-                        inputClass="w-full p-2 pr-10 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        containerClassName="w-full"
-                      />
-                    </div>
-                  </form>
+              </section>
+
+              {/* Create Task Button */}
+              <Button
+                onClick={() => setShowModal(true)}
+                className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-full"
+              >
+                ایجاد وظیفه
+              </Button>
+
+              {/* Create Task Modal */}
+              {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
+                    <h2 className="text-xl font-bold mb-4 text-center">
+                      ایجاد وظیفه جدید
+                    </h2>
+                    <form onSubmit={handleCreateTask} className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="taskTitle"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                          عنوان وظیفه
+                        </label>
+                        <input
+                          id="taskTitle"
+                          type="text"
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="عنوان وظیفه را وارد کنید"
+                          value={taskTitle}
+                          onChange={(e) => setTaskTitle(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="taskDescription"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                          توضیحات وظیفه
+                        </label>
+                        <textarea
+                          id="taskDescription"
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          rows={3}
+                          placeholder="توضیحات وظیفه را وارد کنید"
+                          value={taskDescription}
+                          onChange={(e) => setTaskDescription(e.target.value)}
+                          required
+                        ></textarea>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          تاریخ و زمان
+                        </label>
+                        <div className="relative">
+                          <DatePicker
+                            value={taskDate}
+                            onChange={(date) => setTaskDate(date as DateObject)}
+                            calendar={persian}
+                            locale={persian_fa}
+                            calendarPosition="bottom-right"
+                            plugins={[<TimePicker position="bottom" />]}
+                            format="YYYY/MM/DD HH:mm:ss"
+                            inputClass="w-full p-2 pr-10 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                            containerClassName="w-full"
+                          />
+                          <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        </div>
+                      </div>
+                      <div className="flex justify-end space-x-2 gap-4">
+                        <Button
+                          type="button"
+                          onClick={() => setShowModal(false)}
+                          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                        >
+                          لغو
+                        </Button>
+                        <Button
+                          type="submit"
+                          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          ایجاد
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => setShowEditModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  >
-                    لغو
-                  </button>
-                  <button
-                    onClick={handleEditTask}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    ذخیره تغییرات
-                  </button>
-                </div>
-              </div>
-            </div>
+              )}
+            </>
           )}
         </div>
       </main>
