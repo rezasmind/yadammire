@@ -25,11 +25,14 @@ import Header from "../components/Header";
 import OtpInput from "react-otp-input";
 
 const FormSchema = z.object({
-  otp: z.string().min(6, {
-    message: "لطفا کد ۶ رقمی را وارد کنید",
-  }).max(6, {
-    message: "کد باید دقیقا ۶ رقم باشد",
-  }),
+  otp: z
+    .string()
+    .min(6, {
+      message: "لطفا کد ۶ رقمی را وارد کنید",
+    })
+    .max(6, {
+      message: "کد باید دقیقا ۶ رقم باشد",
+    }),
 });
 
 const Auth = () => {
@@ -128,20 +131,16 @@ const Auth = () => {
         }
       );
       if (response.status === 200) {
-        const { token, phoneNumber, userId, subscriptionStatus } =
-          response.data;
+        const { token, phoneNumber, userId } = response.data;
         // Store token, phone number, userId, and subscriptionStatus in session storage
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("phoneNumber", phoneNumber);
-        sessionStorage.setItem("userId", userId);
-        sessionStorage.setItem(
-          "subscriptionStatus",
-          subscriptionStatus.toString()
-        );
+        sessionStorage.setItem("userId", userId); 
         toast({
           title: "ورود موفق",
           description: "به زودی به صفحه اصلی منتقل می‌شوید",
         });
+        // Redirect to dashboard
         router.push("/dashboard");
       }
     } catch (error: unknown) {
@@ -250,7 +249,7 @@ const Auth = () => {
                 value={otp}
                 onChange={(value: string) => {
                   setOtp(value);
-                  otpForm.setValue('otp', value, { shouldValidate: true });
+                  otpForm.setValue("otp", value, { shouldValidate: true });
                 }}
                 numInputs={6}
                 renderSeparator={<span className="w-2"></span>}

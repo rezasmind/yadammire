@@ -6,7 +6,7 @@ const ZARINPAL_SANDBOX = process.env.ZARINPAL_SANDBOX === "true";
 const CALLBACK_URL = `https://yadammire.ir/api/payment/verify`;
 
 const zarinpal = ZarinpalCheckout.create(
-  "36727d44-19c1-4097-ab74-d91546e01fa4",
+  ZARINPAL_MERCHANT_ID,
   false
 );
 

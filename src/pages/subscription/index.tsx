@@ -70,6 +70,19 @@ export default function Subscription() {
     router.push("/auth");
   };
 
+  const verifyPayment = async (authority: string, status: string) => {
+    try {
+      const response = await axios.post('/api/payment/verify', {
+        Authority: authority,
+        Status: status,
+        phoneNumber: sessionStorage.getItem('phoneNumber') // Add this line
+      });
+      // Handle the response...
+    } catch (error) {
+      console.error('Error verifying payment:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen font-peyda" dir="rtl">
       <header className="w-screen bg-gray-100 px-2 sm:px-4 py-3 flex justify-between items-center shadow-sm">
@@ -86,7 +99,7 @@ export default function Subscription() {
               <div className="absolute right-0 mt-2 w-full sm:w-64 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
                 <div className="p-3">
                   <p className="mb-2 text-xs text-gray-600">
-                    شماره تلفن:{" "}
+                    شم��ره تلفن:{" "}
                     <span className="font-semibold text-gray-800">
                       {phoneNumber}
                     </span>
@@ -103,7 +116,7 @@ export default function Subscription() {
           </div>
           <div className="flex items-center">
             <img
-              src="/images/Logo-Trans.png"
+              src="/Logo-Trans.png"
               alt="لوگو"
               width={40}
               height={40}
@@ -117,7 +130,7 @@ export default function Subscription() {
       <main className="flex-grow bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
         {paymentStatus && (
           <div className={`mb-4 p-4 rounded-lg ${paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
-            {paymentStatus === 'failed' ? 'پرداخت ناموفق بود. لطفا دوباره تلاش کنید.' : 'خطایی رخ داد. لطفا دوباره تلاش کنید.'}
+            {paymentStatus === 'failed' ? 'پرداخت ناموفق بود. لطفا دوباره تلاش کنید.' : 'خطایی رخ داد. لطفا دوبار�� تلاش کنید.'}
           </div>
         )}
 

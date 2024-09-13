@@ -291,8 +291,8 @@ export default function Dashboard() {
             )}
           </div>
           <div className="flex items-center">
-            <Image
-              src="/images/Logo-Trans.png"
+            <img
+              src="/Logo-Trans.png"
               alt="لوگو"
               width={60}
               height={60}
