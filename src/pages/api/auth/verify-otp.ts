@@ -26,13 +26,14 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { phoneNumber, otp } = req.body;
+  let { phoneNumber, otp } = req.body;
 
   if (!phoneNumber || !otp) {
-    return res
-      .status(400)
-      .json({ message: "Phone number and OTP are required" });
+    return res.status(400).json({ message: "Phone number and OTP are required" });
   }
+
+  // Format phone number: remove leading '0' if present
+ 
 
   try {
     // Verify OTP

@@ -37,8 +37,18 @@ export default function Subscription() {
     const { status } = router.query;
     if (status) {
       setPaymentStatus(status as string);
+      if (status === 'success') {
+        // Optionally, update the UI or redirect to dashboard
+        router.push('/dashboard?subscriptionUpdated=true');
+      }
     }
-  }, [router]);
+
+    // Check for payment status from ZarinPal callback
+    const { Authority, Status } = router.query;
+    if (Authority && Status) {
+      verifyPayment(Authority as string, Status as string);
+    }
+  }, [router.query]);
 
   const handlePayment = async () => {
     try {
@@ -75,11 +85,19 @@ export default function Subscription() {
       const response = await axios.post('/api/payment/verify', {
         Authority: authority,
         Status: status,
-        phoneNumber: sessionStorage.getItem('phoneNumber') // Add this line
+        phoneNumber: sessionStorage.getItem('phoneNumber')
       });
-      // Handle the response...
+      
+      if (response.data.success) {
+        setPaymentStatus('success');
+        // Optionally, update the UI or redirect to dashboard
+        router.push('/dashboard?subscriptionUpdated=true');
+      } else {
+        setPaymentStatus('failed');
+      }
     } catch (error) {
       console.error('Error verifying payment:', error);
+      setPaymentStatus('failed');
     }
   };
 
@@ -99,7 +117,7 @@ export default function Subscription() {
               <div className="absolute right-0 mt-2 w-full sm:w-64 bg-white rounded-lg shadow-xl z-20 border border-gray-200">
                 <div className="p-3">
                   <p className="mb-2 text-xs text-gray-600">
-                    شم��ره تلفن:{" "}
+                    شمره تلفن:{" "}
                     <span className="font-semibold text-gray-800">
                       {phoneNumber}
                     </span>
@@ -129,8 +147,18 @@ export default function Subscription() {
 
       <main className="flex-grow bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
         {paymentStatus && (
-          <div className={`mb-4 p-4 rounded-lg ${paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
-            {paymentStatus === 'failed' ? 'پرداخت ناموفق بود. لطفا دوباره تلاش کنید.' : 'خطایی رخ داد. لطفا دوبار�� تلاش کنید.'}
+          <div className={`mb-4 p-4 rounded-lg ${
+            paymentStatus === 'failed' 
+              ? 'bg-red-100 text-red-700' 
+              : paymentStatus === 'success'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-yellow-100 text-yellow-700'
+          }`}>
+            {paymentStatus === 'failed' 
+              ? 'پرداخت ناموفق بود. لطفا دوباره تلاش کنید.' 
+              : paymentStatus === 'success'
+                ? 'پرداخت با موفقیت انجام شد. اشتراک شما فعال شد.'
+                : 'در حال بررسی وضعیت پرداخت...'}
           </div>
         )}
 
