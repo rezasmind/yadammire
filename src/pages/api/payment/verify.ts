@@ -41,7 +41,7 @@ export default async function handler(
       "https://api.zarinpal.com/pg/v4/payment/verify.json",
       {
         merchant_id: ZARINPAL_MERCHANT_ID,
-        amount: 1000, // The amount should match what was set in create.ts
+        amount: 23000, // The amount should match what was set in create.ts
         authority: Authority,
       }
     );

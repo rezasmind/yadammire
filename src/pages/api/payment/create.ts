@@ -19,9 +19,9 @@ export default async function handler(
   }
 
   const { phoneNumber } = req.body;
-  
 
-  const amount = 1000; // 23,000 Tomans
+
+  const amount = 23000; // 23,000 Tomans
 
   try {
     const response = await zarinpal.PaymentRequest({
