@@ -53,6 +53,7 @@ export default function Dashboard() {
     useState(false);
   const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [titleError, setTitleError] = useState("");
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -161,6 +162,11 @@ export default function Dashboard() {
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (taskTitle.length > 40) {
+      setTitleError("به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد");
+      return;
+    }
+
     const phoneNumber = sessionStorage.getItem("phoneNumber");
     if (!phoneNumber) {
       toast({
@@ -237,6 +243,16 @@ export default function Dashboard() {
           variant: "destructive",
         });
       }
+    }
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTaskTitle(newTitle);
+    if (newTitle.length > 40) {
+      setTitleError("به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد");
+    } else {
+      setTitleError("");
     }
   };
 
@@ -402,12 +418,20 @@ export default function Dashboard() {
                         <input
                           id="taskTitle"
                           type="text"
-                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className={`w-full p-2 border ${
+                            titleError ? 'border-red-500' : 'border-gray-300'
+                          } rounded-md focus:ring-blue-500 focus:border-blue-500`}
                           placeholder="عنوان وظیفه را وارد کنید"
                           value={taskTitle}
-                          onChange={(e) => setTaskTitle(e.target.value)}
+                          onChange={handleTitleChange}
                           required
                         />
+                        {titleError && (
+                          <p className="text-red-500 text-xs mt-1">{titleError}</p>
+                        )}
+                        <p className="text-gray-500 text-xs mt-1">
+                          {taskTitle.length}/40 کاراکتر
+                        </p>
                       </div>
                       <div>
                         <label
@@ -456,6 +480,7 @@ export default function Dashboard() {
                         <Button
                           type="submit"
                           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          disabled={!!titleError}
                         >
                           ایجاد
                         </Button>

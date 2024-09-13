@@ -46,8 +46,8 @@ export default async function handler(
     const [year, month, day] = datePart.split('-').map(Number);
     const [hour, minute, second] = timePart.split(':').map(Number);
 
-    // Create a new Date object
-    const taskDate = new Date(year, month - 1, day, hour, minute, second);
+    // Create a new Date object with +03:30 timezone offset
+    const taskDate = new Date(Date.UTC(year, month - 1, day, hour - 3, minute - 30, second));
 
     // Check if the date is valid
     if (isNaN(taskDate.getTime())) {
@@ -57,8 +57,8 @@ export default async function handler(
     console.log("Parsed task date:", taskDate.toISOString());
 
     // Convert to Persian date for verification (optional)
-    const { jy, jm, jd } = toJalaali(taskDate.getFullYear(), taskDate.getMonth() + 1, taskDate.getDate());
-    const persianDate = `${jy}/${jm.toString().padStart(2, "0")}/${jd.toString().padStart(2, "0")} ${taskDate.getHours().toString().padStart(2, "0")}:${taskDate.getMinutes().toString().padStart(2, "0")}:${taskDate.getSeconds().toString().padStart(2, "0")}`;
+    const { jy, jm, jd } = toJalaali(taskDate.getUTCFullYear(), taskDate.getUTCMonth() + 1, taskDate.getUTCDate());
+    const persianDate = `${jy}/${jm.toString().padStart(2, "0")}/${jd.toString().padStart(2, "0")} ${taskDate.getUTCHours().toString().padStart(2, "0")}:${taskDate.getUTCMinutes().toString().padStart(2, "0")}:${taskDate.getUTCSeconds().toString().padStart(2, "0")}`;
     console.log("Converted to Persian date:", persianDate);
 
     // Ensure the task date is in the future
