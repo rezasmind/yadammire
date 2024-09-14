@@ -21,6 +21,15 @@ import AnimatedList from "./components/animated-list";
 import AvatarCircles from "./components/avatar-circles";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { useEffect, useState } from "react";
+import { FaUser, FaTasks } from "react-icons/fa";
+import { parseString } from "xml2js";
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const avatarUrls = [
   "https://avatars.githubusercontent.com/u/20110627",
@@ -112,7 +121,80 @@ export function AnimatedListDemo() {
   );
 }
 
+interface BlogPost {
+  title: string;
+  link: string;
+  pubDate: string;
+  description: string;
+  author: string;
+}
+
 export default function Home() {
+  const [userCount, setUserCount] = useState<number | null>(null);
+  const [taskCount, setTaskCount] = useState<number | null>(null);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCounts() {
+      const { count: userCount, error: userError } = await supabase
+        .from("User")
+        .select("*", { count: "exact", head: true });
+
+      const { count: taskCount, error: taskError } = await supabase
+        .from("Tasks")
+        .select("*", { count: "exact", head: true });
+
+      if (userError) console.error("Error fetching user count:", userError);
+      if (taskError) console.error("Error fetching task count:", taskError);
+
+      setUserCount(userCount);
+      setTaskCount(taskCount);
+    }
+
+    async function fetchBlogPosts() {
+      try {
+        console.log("Fetching blog posts...");
+        const response = await fetch('/blogrss.xml');
+        const xmlData = await response.text();
+        console.log("XML file fetched successfully");
+        
+        parseString(xmlData, (err, result) => {
+          if (err) {
+            console.error('Error parsing XML:', err);
+            setError('Error parsing XML');
+            return;
+          }
+          console.log("XML parsed successfully");
+          
+          if (!result.rss || !result.rss.channel || !result.rss.channel[0].item) {
+            console.error('Unexpected XML structure:', result);
+            setError('Unexpected XML structure');
+            return;
+          }
+
+          const items = result.rss.channel[0].item;
+          console.log(`Found ${items.length} items in the feed`);
+          
+          const lastThreePosts = items.slice(0, 3).map((item: any) => ({
+            title: item.title ? item.title[0] : 'No Title',
+            link: item.link ? item.link[0] : '#',
+            pubDate: item.pubDate ? item.pubDate[0] : 'No Date',
+            description: item.description ? item.description[0] : 'No Description',
+            author: item.author ? item.author[0] : 'Unknown Author',
+          }));
+          console.log("Processed blog posts:", lastThreePosts);
+          setBlogPosts(lastThreePosts);
+        });
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+      }
+    }
+
+    fetchCounts();
+    fetchBlogPosts();
+  }, []);
+
   return (
     <main className="background-white w-full">
       <div className="header w-full flex justify-center items-center">
@@ -152,10 +234,23 @@ export default function Home() {
           <div className="flex gap-0">
             <AvatarCircles numPeople={321} avatarUrls={avatarUrls} />
           </div>
-          <h1 className="font-peyda">
-            <span className=" font-semibold">۳۲۴</span> نفر تا به حال نجات
-            یافتند
-          </h1>
+
+          <div className="font-peyda flex justify-center items-center gap-6 mt-4 bg-gray-100 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center gap-2">
+              <FaUser className="text-primary text-xl" />
+              <p>
+                <span className="font-semibold text-lg">{userCount}</span>
+                <span className="text-sm text-gray-600 mr-1">کاربر</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaTasks className="text-primary text-xl" />
+              <p>
+                <span className="font-semibold text-lg">{taskCount}</span>
+                <span className="text-sm text-gray-600 mr-1">تسک</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -184,7 +279,7 @@ export default function Home() {
             </h1>
 
             <ul className="font-peyda mt-12 text-lg flex flex-col gap-4">
-              <li>-مضحکه خاص و عام میشی</li>
+              <li>-ضحکه خاص و عام میشی</li>
               <li>-انواع فحش های جدید میشنوی</li>
               <li>-کاراتو نمیرسی پس پولیم نداری</li>
               <li>-به تایم مصاحبه استخدامی هم نمیرسی</li>
@@ -274,6 +369,47 @@ export default function Home() {
 
         <PricingPage />
       </div>
+
+      <div className="blog-posts w-full   bg-[#f7f7f7] flex flex-col justify-center items-center p-8 sm:p-14">
+        <h2 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
+          آخرین مطالب وبلاگ
+        </h2>
+        {error && (
+          <p className="text-red-500 mb-4">{error}</p>
+        )}
+        {blogPosts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {blogPosts.map((post, index) => (
+              <a
+                key={index}
+                href={post.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group"
+              >
+                <div className="p-6 flex flex-col h-full">
+                  <h3 className="font-peyda font-bold text-xl mb-3 text-gray-800 group-hover:text-primary transition-colors duration-300">{post.title}</h3>
+                  <p className="text-sm text-gray-500 mb-3 flex items-center">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    {new Date(post.pubDate).toLocaleDateString('fa-IR')}
+                  </p>
+                  <p className="text-sm text-gray-700 mb-4 flex-grow">{post.description.substring(0, 100)}...</p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <p className="text-xs text-gray-500 flex items-center">
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      {post.author}
+                    </p>
+                    <span className="text-primary font-semibold text-sm group-hover:underline">ادامه مطلب</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p>Loading blog posts...</p>
+        )}
+      </div>
+
       <Footer />
     </main>
   );
