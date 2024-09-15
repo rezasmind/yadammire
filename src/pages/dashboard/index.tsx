@@ -20,10 +20,13 @@ import Notification from "src/pages/components/notification";
 import moment from "moment-jalaali";
 import "moment-timezone";
 import { toGregorian } from "jalaali-js";
-import { User } from '@supabase/supabase-js';
-import { createClient } from '@supabase/supabase-js';
+import { User } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface Task {
   id: number;
@@ -33,7 +36,7 @@ interface Task {
   status: boolean;
 }
 
-type ReminderType = 'sms' | 'call' | 'both';
+type ReminderType = "sms" | "call" | "both";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -53,10 +56,12 @@ export default function Dashboard() {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showSubscriptionSuccessModal, setShowSubscriptionSuccessModal] =
     useState(false);
-  const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<number | null>(null);
+  const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<
+    number | null
+  >(null);
   const [isLoading, setIsLoading] = useState(true);
   const [titleError, setTitleError] = useState("");
-  const [reminderType, setReminderType] = useState<ReminderType>('sms');
+  const [reminderType, setReminderType] = useState<ReminderType>("sms");
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -90,13 +95,17 @@ export default function Dashboard() {
   const checkSubscription = async () => {
     try {
       // Remove the leading zero if present
-      const formattedPhoneNumber = phoneNumber.startsWith('0') ? phoneNumber.slice(1) : phoneNumber;
-      const response = await fetch(`/api/user/check-subscription?phoneNumber=${formattedPhoneNumber}`);
+      const formattedPhoneNumber = phoneNumber.startsWith("0")
+        ? phoneNumber.slice(1)
+        : phoneNumber;
+      const response = await fetch(
+        `/api/user/check-subscription?phoneNumber=${formattedPhoneNumber}`
+      );
       const result = await response.json();
       setSubscriptionStatus(result.hasSubscription ? "اشتراک فعال" : "رایگان");
       setSubscriptionDaysLeft(result.daysLeft);
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error("Error checking subscription:", error);
     }
   };
 
@@ -117,8 +126,10 @@ export default function Dashboard() {
     setIsLoading(true);
     try {
       // Remove the leading zero if present
-      const formattedPhoneNumber = phoneNumber.startsWith('0') ? phoneNumber.slice(1) : phoneNumber;
-      
+      const formattedPhoneNumber = phoneNumber.startsWith("0")
+        ? phoneNumber.slice(1)
+        : phoneNumber;
+
       const response = await axios.get(
         `/api/tasks/get-tasks?phoneNumber=${formattedPhoneNumber}`
       );
@@ -166,7 +177,9 @@ export default function Dashboard() {
     e.preventDefault();
 
     if (taskTitle.length > 40) {
-      setTitleError("به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد");
+      setTitleError(
+        "به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد"
+      );
       return;
     }
 
@@ -252,10 +265,14 @@ export default function Dashboard() {
 
   const getReminderTypeValue = (type: ReminderType): number => {
     switch (type) {
-      case 'sms': return 0;
-      case 'call': return 1;
-      case 'both': return 2;
-      default: return 0;
+      case "sms":
+        return 0;
+      case "call":
+        return 1;
+      case "both":
+        return 2;
+      default:
+        return 0;
     }
   };
 
@@ -263,7 +280,9 @@ export default function Dashboard() {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
     if (newTitle.length > 40) {
-      setTitleError("به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد");
+      setTitleError(
+        "به دلیل محدودیت سرویس ارسال پیامک عنوان باید کمتر از ۴۰ کاراکتر باشد"
+      );
     } else {
       setTitleError("");
     }
@@ -290,11 +309,15 @@ export default function Dashboard() {
                       {subscriptionStatus}
                     </span>
                   </p>
-                  {subscriptionStatus === "اشتراک فعال" && subscriptionDaysLeft !== null && (
-                    <p className="mb-2 text-sm text-gray-600">
-                      روزهای باقی‌مانده: <span className="font-semibold text-gray-800">{subscriptionDaysLeft}</span>
-                    </p>
-                  )}
+                  {subscriptionStatus === "اشتراک فعال" &&
+                    subscriptionDaysLeft !== null && (
+                      <p className="mb-2 text-sm text-gray-600">
+                        روزهای باقی‌مانده:{" "}
+                        <span className="font-semibold text-gray-800">
+                          {subscriptionDaysLeft}
+                        </span>
+                      </p>
+                    )}
                   {subscriptionStatus === "رایگان" && (
                     <Button
                       onClick={() => router.push("/subscription")}
@@ -432,7 +455,7 @@ export default function Dashboard() {
                           id="taskTitle"
                           type="text"
                           className={`w-full p-2 border ${
-                            titleError ? 'border-red-500' : 'border-gray-300'
+                            titleError ? "border-red-500" : "border-gray-300"
                           } rounded-md focus:ring-blue-500 focus:border-blue-500`}
                           placeholder="عنوان وظیفه را وارد کنید"
                           value={taskTitle}
@@ -440,7 +463,9 @@ export default function Dashboard() {
                           required
                         />
                         {titleError && (
-                          <p className="text-red-500 text-xs mt-1">{titleError}</p>
+                          <p className="text-red-500 text-xs mt-1">
+                            {titleError}
+                          </p>
                         )}
                         <p className="text-gray-500 text-xs mt-1">
                           {taskTitle.length}/40 کاراکتر
@@ -483,7 +508,9 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="mb-4 flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700">نوع یادآوری</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          نوع یادآوری
+                        </label>
                         <div className="mt-2 space-y-2 space-x-2">
                           <label className="inline-flex items-center">
                             <input
@@ -491,8 +518,8 @@ export default function Dashboard() {
                               className="form-radio"
                               name="reminderType"
                               value="sms"
-                              checked={reminderType === 'sms'}
-                              onChange={() => setReminderType('sms')}
+                              checked={reminderType === "sms"}
+                              onChange={() => setReminderType("sms")}
                             />
                             <span className="mr-2">فقط پیامک</span>
                           </label>
@@ -502,21 +529,10 @@ export default function Dashboard() {
                               className="form-radio"
                               name="reminderType"
                               value="call"
-                              checked={reminderType === 'call'}
-                              onChange={() => setReminderType('call')}
+                              checked={reminderType === "call"}
+                              onChange={() => setReminderType("call")}
                             />
                             <span className="mr-2">فقط تماس صوتی</span>
-                          </label>
-                          <label className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              className="form-radio"
-                              name="reminderType"
-                              value="both"
-                              checked={reminderType === 'both'}
-                              onChange={() => setReminderType('both')}
-                            />
-                            <span className="mr-2">هر دو پیامک و تماس صوتی</span>
                           </label>
                         </div>
                       </div>
