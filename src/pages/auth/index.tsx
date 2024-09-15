@@ -42,6 +42,9 @@ const Auth = () => {
   const [number, setNumber] = useState("");
   const [error, setError] = useState("");
   const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [otpErrorStatus, setOtpErrorStatus] = useState(false);
 
   console.log(otp);
 
@@ -77,8 +80,10 @@ const Auth = () => {
   };
 
   const validatePhoneNumber = (phone: string) => {
-    if (!phone.startsWith("09")) {
-      setError("شماره باید با ۰۹ روع شود");
+    if (phone.length === 0) {
+      setError("شماره تلفن نمی‌تواند خالی باشد");
+    } else if (!phone.startsWith("09")) {
+      setError("شماره باید با ۰۹ شروع شود");
     } else if (phone.length !== 11) {
       setError("شماره باید ۱۱ رقم باشد");
     } else {
@@ -102,7 +107,7 @@ const Auth = () => {
         setShowOtp(true);
         toast({
           title: "کد تایید ارسال شد",
-          description: "لطفا کد ارسال شده ر وارد کنید",
+          description: "لطفا کد ارسال شده را وارد کنید",
         });
       }
     } catch (error: unknown) {
@@ -132,10 +137,10 @@ const Auth = () => {
       );
       if (response.status === 200) {
         const { token, phoneNumber, userId } = response.data;
-        // Store token, phone number, userId, and subscriptionStatus in session storage
+        // Store token, phone number, userId in session storage
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("phoneNumber", phoneNumber);
-        sessionStorage.setItem("userId", userId); 
+        sessionStorage.setItem("userId", userId);
         toast({
           title: "ورود موفق",
           description: "به زودی به صفحه اصلی منتقل می‌شوید",
@@ -144,15 +149,20 @@ const Auth = () => {
         router.push("/dashboard");
       }
     } catch (error: unknown) {
-      console.error(
-        "Error verifying OTP:",
-        error instanceof Error ? error.message : String(error)
-      );
-      toast({
-        title: "خطا در تایید کد",
-        description: "کد وارد شده صحیح نیست",
-        variant: "destructive",
-      });
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setOtpError("کد وارد شده اشتباه است. لطفا دوباره بررسی کنید.");
+        } else if (error.response?.status === 404) {
+          setOtpError(
+            "کد وارد شده منقضی شده است. لطفا دوباره درخواست کد کنید."
+          );
+        } else {
+          setOtpError("خطایی در تایید کد رخ داد. لطفا دوباره تلاش کنید.");
+        }
+      } else {
+        setOtpError("خطای ناشناخته. لطفا دوباره تلاش کنید.");
+      }
+      console.error("Error verifying OTP:", error);
     }
   };
 
@@ -168,21 +178,38 @@ const Auth = () => {
   };
 
   const handlePhoneSubmit = async (data: { phoneNumber: string }) => {
-    if (!error) {
+    if (!error && number.length === 11) {
       try {
         await sendOtp();
-        setShowNumber(false);
-        setShowOtp(true);
-        setOtp(""); // Reset the OTP state
-        otpForm.reset(); // Reset the form state
+        // No need to set states here, as they're already set in sendOtp
       } catch (error) {
         console.error("Error in handlePhoneSubmit:", error);
       }
+    } else {
+      setError("لطفا شماره تلفن معتبر وارد کنید");
     }
   };
 
-  const handleOtpSubmit = (data: z.infer<typeof FormSchema>) => {
-    verifyOtp(data.otp);
+  const handleOtpChange = (value: string) => {
+    setOtp(value);
+    setOtpError("");
+    setOtpErrorStatus(false); // Clear error when user starts typing
+    otpForm.setValue("otp", value, { shouldValidate: true });
+    if (value.length === 6) {
+      otpForm.handleSubmit(handleOtpSubmit)();
+    }
+  };
+
+  const handleOtpSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setIsLoading(true);
+    setOtpError(""); // Clear previous errors
+    try {
+      await verifyOtp(data.otp);
+    } catch (error) {
+      console.error("Error in handleOtpSubmit:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const render = () => {
@@ -227,7 +254,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   className="text-sm bg-primary rounded-xl"
-                  disabled={!!error}
+                  disabled={!!error || number.length !== 11}
                 >
                   ارسال کد
                 </Button>
@@ -247,27 +274,39 @@ const Auth = () => {
             >
               <OtpInput
                 value={otp}
-                onChange={(value: string) => {
-                  setOtp(value);
-                  otpForm.setValue("otp", value, { shouldValidate: true });
-                }}
+                onChange={handleOtpChange}
                 numInputs={6}
                 renderSeparator={<span className="w-2"></span>}
                 renderInput={(props) => <input {...props} />}
-                inputStyle="w-12 h-12 text-center text-2xl border-2 border-primary rounded-md"
+                inputStyle={`w-12 h-12 text-center text-2xl border-2 rounded-md ${
+                  otpError ? "border-red-500" : "border-primary"
+                }`}
                 containerStyle="flex flex-row-reverse justify-center"
                 inputType="tel"
                 shouldAutoFocus={true}
               />
-              {otpForm.formState.errors.otp && (
-                <p className="text-red-500 text-sm text-center">
-                  {otpForm.formState.errors.otp.message}
-                </p>
+              {otpError && (
+                <p className="text-red-500 text-sm text-center">{otpError}</p>
               )}
-              <Button type="submit" className="text-sm bg-primary rounded-xl">
-                تایید کد
+              <Button
+                type="submit"
+                className="text-sm bg-primary rounded-xl"
+                disabled={isLoading}
+              >
+                {isLoading ? "در حال بررسی..." : "تایید کد"}
               </Button>
             </form>
+            <Button
+              onClick={() => {
+                setShowOtp(false);
+                setShowNumber(true);
+                setOtp("");
+                setOtpError("");
+              }}
+              className="text-sm bg-gray-200 text-gray-800 rounded-xl mt-4"
+            >
+              بازگشت و ارسال مجدد کد
+            </Button>
           </div>
         ) : null}
       </div>

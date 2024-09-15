@@ -33,6 +33,8 @@ interface Task {
   status: boolean;
 }
 
+type ReminderType = 'sms' | 'call' | 'both';
+
 export default function Dashboard() {
   const router = useRouter();
   const [showPopup, setShowPopup] = useState(false);
@@ -54,6 +56,7 @@ export default function Dashboard() {
   const [subscriptionDaysLeft, setSubscriptionDaysLeft] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [titleError, setTitleError] = useState("");
+  const [reminderType, setReminderType] = useState<ReminderType>('sms');
 
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
@@ -212,6 +215,7 @@ export default function Dashboard() {
       description: taskDescription,
       date: formattedDateTime,
       phoneNumber: phoneNumber,
+      reminder_type: getReminderTypeValue(reminderType),
     };
 
     try {
@@ -243,6 +247,15 @@ export default function Dashboard() {
           variant: "destructive",
         });
       }
+    }
+  };
+
+  const getReminderTypeValue = (type: ReminderType): number => {
+    switch (type) {
+      case 'sms': return 0;
+      case 'call': return 1;
+      case 'both': return 2;
+      default: return 0;
     }
   };
 
@@ -467,6 +480,44 @@ export default function Dashboard() {
                             containerClassName="w-full"
                           />
                           <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        </div>
+                      </div>
+                      <div className="mb-4 flex flex-col gap-2">
+                        <label className="block text-sm font-medium text-gray-700">نوع یادآوری</label>
+                        <div className="mt-2 space-y-2 space-x-2">
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              className="form-radio"
+                              name="reminderType"
+                              value="sms"
+                              checked={reminderType === 'sms'}
+                              onChange={() => setReminderType('sms')}
+                            />
+                            <span className="mr-2">فقط پیامک</span>
+                          </label>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              className="form-radio"
+                              name="reminderType"
+                              value="call"
+                              checked={reminderType === 'call'}
+                              onChange={() => setReminderType('call')}
+                            />
+                            <span className="mr-2">فقط تماس صوتی</span>
+                          </label>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              className="form-radio"
+                              name="reminderType"
+                              value="both"
+                              checked={reminderType === 'both'}
+                              onChange={() => setReminderType('both')}
+                            />
+                            <span className="mr-2">هر دو پیامک و تماس صوتی</span>
+                          </label>
                         </div>
                       </div>
                       <div className="flex justify-end space-x-2 gap-4">

@@ -25,7 +25,7 @@ export default async function handler(
 
   console.log("Received request body:", req.body);
 
-  const { title, description, date, phoneNumber } = req.body;
+  const { title, description, date, phoneNumber, reminder_type } = req.body;
 
   // Validate input
   const errors = [];
@@ -109,6 +109,7 @@ export default async function handler(
           phone: phoneNumber,
           status: false,
           sms_sent: false,
+          reminder_type: reminder_type,
         },
       ])
       .select();

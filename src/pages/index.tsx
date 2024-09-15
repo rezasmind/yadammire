@@ -155,39 +155,45 @@ export default function Home() {
     async function fetchBlogPosts() {
       try {
         console.log("Fetching blog posts...");
-        const response = await fetch('/blogrss.xml');
+        const response = await fetch("/blogrss.xml");
         const xmlData = await response.text();
         console.log("XML file fetched successfully");
-        
+
         parseString(xmlData, (err, result) => {
           if (err) {
-            console.error('Error parsing XML:', err);
-            setError('Error parsing XML');
+            console.error("Error parsing XML:", err);
+            setError("Error parsing XML");
             return;
           }
           console.log("XML parsed successfully");
-          
-          if (!result.rss || !result.rss.channel || !result.rss.channel[0].item) {
-            console.error('Unexpected XML structure:', result);
-            setError('Unexpected XML structure');
+
+          if (
+            !result.rss ||
+            !result.rss.channel ||
+            !result.rss.channel[0].item
+          ) {
+            console.error("Unexpected XML structure:", result);
+            setError("Unexpected XML structure");
             return;
           }
 
           const items = result.rss.channel[0].item;
           console.log(`Found ${items.length} items in the feed`);
-          
+
           const lastThreePosts = items.slice(0, 3).map((item: any) => ({
-            title: item.title ? item.title[0] : 'No Title',
-            link: item.link ? item.link[0] : '#',
-            pubDate: item.pubDate ? item.pubDate[0] : 'No Date',
-            description: item.description ? item.description[0] : 'No Description',
-            author: item.author ? item.author[0] : 'Unknown Author',
+            title: item.title ? item.title[0] : "No Title",
+            link: item.link ? item.link[0] : "#",
+            pubDate: item.pubDate ? item.pubDate[0] : "No Date",
+            description: item.description
+              ? item.description[0]
+              : "No Description",
+            author: item.author ? item.author[0] : "Unknown Author",
           }));
           console.log("Processed blog posts:", lastThreePosts);
           setBlogPosts(lastThreePosts);
         });
       } catch (error) {
-        console.error('Error fetching blog posts:', error);
+        console.error("Error fetching blog posts:", error);
       }
     }
 
@@ -261,7 +267,7 @@ export default function Home() {
         </h1>
 
         <div className="boxes w-full flex flex-col sm:flex-row justify-center gap-8">
-          <div className="left w-full sm:w-1/2 bg-primary rounded-xl p-6 sm:p-8 border">
+          <div className="left w-full sm:w-1/4 bg-primary rounded-xl p-6 sm:p-8 border">
             <h1 className="font-peyda font-semibold text-2xl">
               ADHD با یادم میره
             </h1>
@@ -273,7 +279,7 @@ export default function Home() {
               <li>-سر تایم پروژه هاتو تحویل میدی</li>
             </ul>
           </div>
-          <div className="right w-full sm:w-1/2 bg-[#e6e6e6] rounded-xl p-6 sm:p-8">
+          <div className="right w-full sm:w-1/4 bg-[#e6e6e6] rounded-xl p-6 sm:p-8">
             <h1 className="font-peyda font-semibold text-2xl">
               ADHD بدون یادم میره
             </h1>
@@ -370,44 +376,76 @@ export default function Home() {
         <PricingPage />
       </div>
 
-      <div className="blog-posts w-full   bg-[#f7f7f7] flex flex-col justify-center items-center p-8 sm:p-14">
-        <h2 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
-          آخرین مطالب وبلاگ
-        </h2>
-        {error && (
-          <p className="text-red-500 mb-4">{error}</p>
-        )}
-        {blogPosts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
-              <a
-                key={index}
-                href={post.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group"
-              >
-                <div className="p-6 flex flex-col h-full">
-                  <h3 className="font-peyda font-bold text-xl mb-3 text-gray-800 group-hover:text-primary transition-colors duration-300">{post.title}</h3>
-                  <p className="text-sm text-gray-500 mb-3 flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    {new Date(post.pubDate).toLocaleDateString('fa-IR')}
-                  </p>
-                  <p className="text-sm text-gray-700 mb-4 flex-grow">{post.description.substring(0, 100)}...</p>
-                  <div className="flex items-center justify-between mt-auto">
-                    <p className="text-xs text-gray-500 flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                      {post.author}
+      <div className="blog-posts w-full   bg-[#f7f7f7]  flex flex-col justify-center items-center p-8 sm:p-14">
+        <div className="w-1/2">
+          <h2 className="font-peyda font-bold text-2xl sm:text-3xl text-center mb-6">
+            آخرین مطالب وبلاگ
+          </h2>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {blogPosts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {blogPosts.map((post, index) => (
+                <a
+                  key={index}
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group"
+                >
+                  <div className="p-6 flex flex-col h-full">
+                    <h3 className="font-peyda font-bold text-xl mb-3 text-gray-800 group-hover:text-primary transition-colors duration-300">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      {new Date(post.pubDate).toLocaleDateString("fa-IR")}
                     </p>
-                    <span className="text-primary font-semibold text-sm group-hover:underline">ادامه مطلب</span>
+                    <p className="text-sm text-gray-700 mb-4 flex-grow">
+                      {post.description.substring(0, 100)}...
+                    </p>
+                    <div className="flex items-center justify-between mt-auto">
+                      <p className="text-xs text-gray-500 flex items-center">
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                        {post.author}
+                      </p>
+                      <span className="text-primary font-semibold text-sm group-hover:underline">
+                        ادامه مطلب
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        ) : (
-          <p>Loading blog posts...</p>
-        )}
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p>Loading blog posts...</p>
+          )}
+        </div>
       </div>
 
       <Footer />
