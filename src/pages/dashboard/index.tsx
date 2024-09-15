@@ -353,14 +353,14 @@ export default function Dashboard() {
                         key={task.id}
                         className="bg-white p-3 sm:p-4 rounded-lg shadow-md border border-gray-200"
                       >
-                        <h3 className="font-semibold text-sm sm:text-base mb-2">
+                        <h3 className="font-semibold text-md text-primary sm:text-base mb-2">
                           {task.title}
                         </h3>
                         <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3">
                           {task.description}
                         </p>
                         <div className="flex justify-between items-center text-xs">
-                          <span className="text-primary font-medium">
+                          <span className="text-[#002840] font-medium">
                             مهلت: {task.date}
                           </span>
                         </div>
