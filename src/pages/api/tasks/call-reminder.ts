@@ -25,9 +25,10 @@ export default async function handler(
         params: {
           Token: AVANAK_TOKEN,
           MessageID: AVANAK_MESSAGE_ID,
-          Number: phoneNumber,
+          Number: `0${phoneNumber}`,
           Vote: false,
           ServerID: 0,
+          
         },
       }
     );
