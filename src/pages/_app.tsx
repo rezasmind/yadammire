@@ -6,14 +6,14 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/react";
 import logo from "../../public/Logo-Trans.png";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="overflow-clip flex flex-col justify-center items-center font-peyda">
       <Head>
         <title>یادم میره</title>
-        <link rel="icon" href="/images/Logo-Trans.png" sizes="any" />
+        <link rel="icon" href="/avatar.png" sizes="any" />
         <meta name="enamad" content="39719853" />
         <meta
           name="description"
@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
       </Head>
       <Analytics />
-      <SpeedInsights/>
+      <SpeedInsights />
       <Component {...pageProps} />
     </div>
   );
