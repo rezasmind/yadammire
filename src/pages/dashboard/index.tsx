@@ -5,15 +5,13 @@ import Image from "next/image";
 import {
   Cog6ToothIcon,
   CalendarIcon,
-  ClockIcon,
-  TrashIcon,
 } from "@heroicons/react/24/solid";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { format } from "date-fns-jalali";
-import { Button, Modal, Input, Textarea } from "@nextui-org/react";
+import { Button, Modal, Input, Textarea, Link } from "@nextui-org/react";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import Notification from "src/pages/components/notification";
@@ -556,6 +554,13 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
+
+              {/* Add this new section */}
+              <section className="mb-6 sm:mb-8">
+                <Link href="/suggestions" className="text-primary hover:underline">
+                  مشاهده و ارسال پیشنهادات
+                </Link>
+              </section>
             </>
           )}
         </div>
