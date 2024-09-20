@@ -19,9 +19,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
-
-  const { phoneNumber } = req.body;
+  // Get phoneNumber from body or query parameters
+  const phoneNumber = req.body.phoneNumber || req.query.phoneNumber;
 
   if (!phoneNumber) {
     return res.status(400).json({ message: "Phone number is required" });
